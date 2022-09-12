@@ -1,0 +1,9 @@
+*.log
+.DS_Store
+node_modules
+dist
+.yarn
+dist
+json_results
+dates.db
+.tab
