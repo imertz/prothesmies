@@ -163,4 +163,10 @@ export const prothesmiesNeasTaktikis = (
   return prothesmies;
 };
 
-console.log(prothesmiesNeasTaktikis('2022-09-12', { dikasimos: '2022-12-14' }));
+console.log(
+  prothesmiesNeasTaktikis('2022-09-12', {
+    dikasimos: '2022-12-14',
+    topiki: 'Αθηνών',
+    yliki: 'Ειρ',
+  })
+);
