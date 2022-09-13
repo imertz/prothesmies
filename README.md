@@ -1,3 +1,4 @@
+![Προθεσμίες logo](https://github.com/imertz/prothesmies/blob/master/logo.jpg)
 # prothesmies
 
 Εφαρμογή ανοιχτού κώδικα για τον υπολογισμό Δικαστικών προθεσμιών.
