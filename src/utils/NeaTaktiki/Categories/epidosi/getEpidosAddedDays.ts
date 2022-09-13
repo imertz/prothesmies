@@ -10,9 +10,6 @@ import { earlierThan } from '../../../Various/checkEarlierOrLaterDate';
 import { reverseDate } from '../../../Various/reverseDate';
 import { getAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
 
-// interface Options {
-//   dimosio?: boolean;
-// }
 export const getEpidosiAddedDays = (start: string, options: Options) => {
   if (earlierThan('2021-03-26', start)) {
     let text: {
