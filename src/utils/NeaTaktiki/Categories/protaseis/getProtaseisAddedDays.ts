@@ -21,13 +21,18 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     imeres: string[];
   } = { nomothesia: [], ypologismos: [], imeres: [] };
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
-    let days = options?.katoikos_code === '2' ? 120 : 90;
-    text.imeres.push(
-      `Eντός ${days} ημερών από το τέλος της προθεσμίας για επίδοση της αγωγής.`
-    );
+    if (options.klisi === false) {
+      let days = options?.katoikos_code === '2' ? 120 : 90;
+      text.imeres.push(
+        `Eντός ${days} ημερών από το τέλος της προθεσμίας για επίδοση της αγωγής.`
+      );
+    } else {
+      let days = options?.katoikos_code === '2' ? 120 : 90;
+      text.imeres.push(`Eντός ${days} ημερών από την κατάθεση της κλήσης.`);
+    }
   }
   if (new Date(start).getTime() < new Date('2022-01-01').getTime()) {
-    let days = options?.katoikos_code === '2' ? 120 : 90;
+    let days = options?.katoikos_code === '2' ? 130 : 100;
     text.imeres.push(
       `Eντός ${days} ημερών από την κατάθεση της αγωγής. Βλ. 237 § 1 εδ. α΄ ΚΠολΔ, όπως ίσχυε μέχρι την 31η.12.2021, (αντικαταστάθηκε βάσει του άρθρου 12 του Ν.4842/2021).`
     );

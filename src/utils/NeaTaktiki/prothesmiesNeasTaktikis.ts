@@ -179,4 +179,6 @@ export const prothesmiesNeasTaktikis = (
   return prothesmies;
 };
 
-console.log(prothesmiesNeasTaktikis('2021-10-02', { klisi: true }));
+console.log(
+  prothesmiesNeasTaktikis('2021-10-02', { klisi: true, katoikos_code: '2' })
+);
