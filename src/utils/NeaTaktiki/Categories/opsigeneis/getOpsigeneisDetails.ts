@@ -9,9 +9,9 @@ import { getOpsigeneisAddedDays } from './getOpsigeneisAddedDays';
 import { checkIfIncluded } from '../../../Dikastiria/dikastiria';
 
 export const getOpsigeneisDetails = (
+  start: string,
   prothesmia: string,
-  options: Options,
-  start?: string
+  options: Options
 ) => {
   if (start === undefined) {
     return undefined;

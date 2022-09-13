@@ -7,3 +7,5 @@ dist
 json_results
 dates.db
 .tab
+yarn.lock
+package-lock.json

@@ -101,15 +101,20 @@ export const prothesmiesNeasTaktikis = (
   );
   let protaseis = getProtaseis(start, options ? options : optionsDefault);
   let prosthiki = getProsthiki(protaseis, options ? options : optionsDefault);
-  let opsigeneis;
-  let opsigeneisΑntikrousi;
-  if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
+  let opsigeneis = undefined;
+  let opsigeneisΑntikrousi = undefined;
+  if (
+    new Date(start).getTime() >= new Date('2022-01-01').getTime() &&
+    options?.dikasimos !== undefined
+  ) {
+    console.log(options.dikasimos);
+
     opsigeneis = getOpsigeneis(
-      options?.dikasimos ? options.dikasimos : start,
+      options?.dikasimos,
       options ? options : optionsDefault
     );
     opsigeneisΑntikrousi = getAntikrousiOpsig(
-      options?.dikasimos ? options.dikasimos : start,
+      options?.dikasimos,
       options ? options : optionsDefault
     );
   }
@@ -149,24 +154,24 @@ export const prothesmiesNeasTaktikis = (
       prosthiki,
       options ? options : optionsDefault
     ),
-    opsigeneisDetails: getOpsigeneisDetails(
-      prosthiki,
-      options ? options : optionsDefault,
-      dikasimos
-    ),
-    opsigeneisAntikrousiDetails: getOpsigeneisAntikrousiDetails(
-      prosthiki,
-      options ? options : optionsDefault,
-      dikasimos
-    ),
   };
+  if (opsigeneis !== undefined && options?.dikasimos !== undefined) {
+    console.log(options.dikasimos);
+
+    prothesmies.opsigeneisDetails = getOpsigeneisDetails(
+      options.dikasimos,
+      opsigeneis,
+      options ? options : optionsDefault
+    );
+  }
+  if (opsigeneisΑntikrousi !== undefined && options?.dikasimos !== undefined) {
+    prothesmies.opsigeneisAntikrousiDetails = getOpsigeneisAntikrousiDetails(
+      options.dikasimos,
+      opsigeneisΑntikrousi,
+      options ? options : optionsDefault
+    );
+  }
   return prothesmies;
 };
 
-console.log(
-  prothesmiesNeasTaktikis('2022-09-12', {
-    dikasimos: '2022-12-14',
-    topiki: 'Αθηνών',
-    yliki: 'Ειρ',
-  })
-);
+console.log(prothesmiesNeasTaktikis('2022-02-09'));
