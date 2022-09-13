@@ -173,5 +173,3 @@ export const prothesmiesNeasTaktikis = (
   }
   return prothesmies;
 };
-
-console.log(prothesmiesNeasTaktikis('2022-02-09'));

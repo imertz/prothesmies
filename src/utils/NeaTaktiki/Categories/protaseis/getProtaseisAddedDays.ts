@@ -2,7 +2,7 @@ import { analyseArgies, getDate } from '../../../CalculateDates/calculateDate';
 import { argiesFunc } from '../../../ArgiesAndAnastoli/ArgiesFunc';
 import { addArgAndAnastDays } from '../../../Various/addAndRemoveDays';
 import { anastoliFunc } from '../../../ArgiesAndAnastoli/AnastoliFunc';
-import { extraArgies } from '../../Argies/extraArgies';
+import { extraArgies } from '../../../ArgiesAndAnastoli/extraArgies';
 import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
