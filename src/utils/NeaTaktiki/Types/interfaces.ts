@@ -5,4 +5,5 @@ export interface Options {
   topiki_code?: string;
   yliki?: 'Ειρ' | 'Μον' | 'Πολ';
   topiki?: string;
+  klisi?: boolean;
 }

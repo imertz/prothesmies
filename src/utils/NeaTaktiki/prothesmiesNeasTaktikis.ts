@@ -74,6 +74,10 @@ export const prothesmiesNeasTaktikis = (
   let dikasimos = options?.dikasimos ?? undefined;
   let yliki = options?.yliki ?? 'Μον';
   let ylikiGreek = 'Μον ';
+  let klisi = false;
+  if (options?.klisi !== undefined) {
+    klisi = options.klisi;
+  }
   if (yliki === 'Πολ') {
     ylikiGreek = 'Πολ  ';
   }
@@ -87,6 +91,7 @@ export const prothesmiesNeasTaktikis = (
     topiki: `${ylikiGreek}${topiki}`,
     yliki,
     dikasimos,
+    klisi,
   };
 
   if (options !== undefined) {
@@ -173,3 +178,5 @@ export const prothesmiesNeasTaktikis = (
   }
   return prothesmies;
 };
+
+console.log(prothesmiesNeasTaktikis('2021-10-02', { klisi: true }));
