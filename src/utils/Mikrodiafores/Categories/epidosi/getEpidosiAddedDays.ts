@@ -13,12 +13,12 @@ export const getEpidosiAddedDays = (start: string, options?: Options) => {
     ypologismos: string[];
     imeres: string[];
   } = { nomothesia: [], ypologismos: [], imeres: [] };
-  let days = options?.katoikos_code === '2' ? 30 : 10;
+  let days = options?.katoikos_code ? 30 : 10;
 
   text.imeres.push(`${days} ημέρες από την κατάθεση της αγωγής.`);
 
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio_code) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 

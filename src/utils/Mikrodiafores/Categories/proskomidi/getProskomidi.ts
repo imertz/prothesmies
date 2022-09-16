@@ -10,7 +10,7 @@ export const getProskomidi = (epidosi: string, options?: Options): string => {
   let argiesDimosiou: string[] = [];
   let days = 20;
 
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio_code) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   const year = parseInt(epidosi.slice(0, 4));

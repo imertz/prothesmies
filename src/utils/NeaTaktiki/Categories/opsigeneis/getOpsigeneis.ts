@@ -12,7 +12,7 @@ import { getAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
 // }
 export const getOpsigeneis = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -21,7 +21,7 @@ export const getOpsigeneis = (start: string, options: Options): string => {
   let opsigeneis = getDateReverse(start, 20, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
-      ...getAnastolesAnaDikastirio(topiki, 'opsigeneis'),
+      ...getAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

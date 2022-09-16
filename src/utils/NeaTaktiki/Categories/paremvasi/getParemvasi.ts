@@ -13,9 +13,9 @@ import { getAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
 // }
 export const getParemvasi = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
-  let days = options?.katoikos_code === '2' ? 90 : 60;
+  let days = options?.exoterikou ? 90 : 60;
 
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -25,7 +25,7 @@ export const getParemvasi = (start: string, options: Options): string => {
   let paremvasi = getDate(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
-      ...getAnastolesAnaDikastirio(topiki, 'paremvasi'),
+      ...getAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

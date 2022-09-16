@@ -18,9 +18,9 @@ export const getEpidosiAddedDays = (start: string, options: Options) => {
       imeres: string[];
     } = { nomothesia: [], ypologismos: [], imeres: [] };
     let argiesDimosiou: string[] = [];
-    let days = options?.katoikos_code === '2' ? 60 : 30;
+    let days = options?.exoterikou ? 60 : 30;
 
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
     let topiki = options?.topiki ?? 'Αθηνών';
@@ -28,7 +28,7 @@ export const getEpidosiAddedDays = (start: string, options: Options) => {
     let epidosi = getDate(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'epidosi'),
+        ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -45,7 +45,7 @@ export const getEpidosiAddedDays = (start: string, options: Options) => {
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'epidosi'),
+        ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -72,18 +72,18 @@ export const getEpidosiAddedDays = (start: string, options: Options) => {
     } = { nomothesia: [], ypologismos: [], imeres: [] };
     let argiesDimosiou: string[] = [];
 
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
     let topiki = options?.topiki ?? 'Αθηνών';
 
     const year = parseInt(start.slice(0, 4));
-    let days = options?.katoikos_code === '2' ? 60 : 30;
+    let days = options?.exoterikou ? 60 : 30;
 
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'epidosi'),
+        ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });

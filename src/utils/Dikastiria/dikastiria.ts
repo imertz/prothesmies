@@ -757,23 +757,6 @@ export function removeEirinodikeia(eirinodikeia: string[]) {
     obj.eirinodikeia = r.eirinodikeia.filter(k => !r.exceptions.includes(k));
     arrFiltered.push(obj);
   });
-  // const efeteio = dikastiria.filter(r => {
-  //   return r?.protovathmia
-  //     .map(k => k.eirinodikeia)
-  //     .flat()
-  //     .includes(eirinodikeia);
-  // })[0];
-  // const protodikeio = efeteio?.protovathmia.filter(r =>
-  //   r.eirinodikeia.includes(eirinodikeia)
-  // )[0];
-  // const eirinodikeiaFiltered = protodikeio.eirinodikeia.filter(
-  //   r => r !== eirinodikeia
-  // );
-  // const filtered = {
-  //   protodikeio: protodikeio.protodikeio,
-  //   eirinodikeia: eirinodikeiaFiltered,
-  // };
-  // return filtered;
   return arrFiltered;
 }
 
@@ -808,10 +791,6 @@ export function normalizePeriohesWithExceptions(
   const protodikeiaIncluded = includedAfterExceptions
     .filter(r => r.includes('Πολ '))
     .map(k => k.replace('Πολ ', ''));
-  // const onlyPeriohes = periohes.filter(
-  //   (r: string) =>
-  //     !r.includes('Πολ ') && !r.includes('Πολ ') && !r.includes('Ειρ ')
-  // );
   const periohesFiltered = periohes?.filter(
     (r: string) => !protodikeiaIncluded.includes(r)
   );
@@ -856,15 +835,16 @@ export function checkIfIncluded(topiki: string, periohes: string[]) {
   return false;
 }
 
-export function getAnastolesAnaDikastirio(dikastirio: string, eidos: string) {
-  let fixedDikastirio = dikastirio;
-  if (
-    !dikastirio.includes('Πολ ') &&
-    !dikastirio.includes('Μον ') &&
-    !dikastirio.includes('Ειρ ')
-  ) {
-    fixedDikastirio = `Μον ${dikastirio}`;
+export function getAnastolesAnaDikastirio(
+  dikastirio: string,
+  eidos: string,
+  yliki?: string
+) {
+  let ylikiDefault = 'Μον';
+  if (yliki !== undefined) {
+    ylikiDefault = yliki;
   }
+  let fixedDikastirio = `${ylikiDefault} ${dikastirio}`;
 
   return legalAnalysis
     .filter(r =>

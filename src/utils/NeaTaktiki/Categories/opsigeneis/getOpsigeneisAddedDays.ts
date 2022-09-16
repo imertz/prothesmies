@@ -15,7 +15,7 @@ export const getOpsigeneisAddedDays = (start: string, options: Options) => {
   let days = 20;
   let argiesDimosiou: string[] = [];
 
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 
@@ -32,7 +32,7 @@ export const getOpsigeneisAddedDays = (start: string, options: Options) => {
   const argia = analyseArgiesReverse(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
-      ...getAnastolesAnaDikastirio(topiki, 'opsigeneis'),
+      ...getAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

@@ -16,7 +16,7 @@ export const getProsthParemv = (
   let argiesDimosiou: string[] = [];
   let days = 5;
 
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio_code) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   const year = parseInt(proskParemv.slice(0, 4));

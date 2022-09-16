@@ -22,27 +22,27 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
   } = { nomothesia: [], ypologismos: [], imeres: [] };
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
     if (options.klisi === false) {
-      let days = options?.katoikos_code === '2' ? 120 : 90;
+      let days = options?.exoterikou ? 120 : 90;
       text.imeres.push(
         `Eντός ${days} ημερών από το τέλος της προθεσμίας για επίδοση της αγωγής.`
       );
     } else {
-      let days = options?.katoikos_code === '2' ? 120 : 90;
+      let days = options?.exoterikou ? 120 : 90;
       text.imeres.push(`Eντός ${days} ημερών από την κατάθεση της κλήσης.`);
     }
   }
   if (new Date(start).getTime() < new Date('2022-01-01').getTime()) {
-    let days = options?.katoikos_code === '2' ? 130 : 100;
+    let days = options?.exoterikou ? 130 : 100;
     text.imeres.push(
       `Eντός ${days} ημερών από την κατάθεση της αγωγής. Βλ. 237 § 1 εδ. α΄ ΚΠολΔ, όπως ίσχυε μέχρι την 31η.12.2021, (αντικαταστάθηκε βάσει του άρθρου 12 του Ν.4842/2021).`
     );
   }
 
-  let days = options?.katoikos_code === '2' ? 130 : 100;
+  let days = options?.exoterikou ? 130 : 100;
 
   if (earlierThan('2021-03-26', start)) {
     let argiesDimosiou: string[] = [];
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
     let topiki = options?.topiki ?? 'Αθηνών';
@@ -52,7 +52,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     let protaseis = getDate(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+        ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -69,7 +69,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+        ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -90,7 +90,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
   }
   if (earlierThan('2022-02-22', start)) {
     let argiesDimosiou: string[] = [];
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
 
@@ -134,7 +134,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+        ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -155,7 +155,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     return text;
   } else {
     let argiesDimosiou: string[] = [];
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
     let topiki = options?.topiki ?? 'Αθηνών';
@@ -164,7 +164,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+        ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
         ...argiesDimosiou,
       ]),
     });

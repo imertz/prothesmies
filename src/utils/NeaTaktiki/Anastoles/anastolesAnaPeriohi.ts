@@ -248,8 +248,3 @@ export const anastolesAnaPeriohi = [
     imerominies: [],
   },
 ];
-
-// export function getAnastolesAnaPeriohi(periohi: string) {
-//   return anastolesAnaPeriohi.filter(r => r.periohi.includes(periohi))[0]
-//     .imerominies;
-// }

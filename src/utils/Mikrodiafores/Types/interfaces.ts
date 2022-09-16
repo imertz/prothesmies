@@ -1,5 +1,5 @@
 export interface Options {
-  dimosio_code?: string;
-  katoikos_code?: string;
+  dimosio_code?: boolean;
+  katoikos_code?: boolean;
   topiki?: string;
 }

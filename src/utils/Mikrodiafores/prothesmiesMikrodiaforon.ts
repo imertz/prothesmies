@@ -63,11 +63,11 @@ interface ProthesmiesMikrodiaforon {
 }
 
 export const prothesmiesMikrodiaforon = (
-  start: string,
+  katathesi: string,
   options?: Options
 ): ProthesmiesMikrodiaforon => {
-  let katoikos_code = options?.katoikos_code ?? '1';
-  let dimosio_code = options?.dimosio_code ?? '1';
+  let katoikos_code = options?.katoikos_code ?? false;
+  let dimosio_code = options?.dimosio_code ?? false;
   let topiki = options?.topiki ?? 'Αθηνών';
 
   let optionsDefault: Options = {
@@ -76,12 +76,12 @@ export const prothesmiesMikrodiaforon = (
     topiki,
   };
 
-  let epidosi = getEpidosi(start, options ? options : optionsDefault);
+  let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
   let proskomidi = getProskomidi(epidosi, options ? options : optionsDefault);
   let prosthiki = getProsthiki(proskomidi, options ? options : optionsDefault);
-  let paremvasi = getParemvasi(start, options ? options : optionsDefault);
+  let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);
   let proskomidiParemv = getProskomParemv(
-    start,
+    katathesi,
     options ? options : optionsDefault
   );
   let prosthikiParemv = getProsthParemv(
@@ -90,7 +90,7 @@ export const prothesmiesMikrodiaforon = (
   );
 
   const prothesmies: ProthesmiesMikrodiaforon = {
-    katathesi: start,
+    katathesi,
     epidosi,
     proskomidi,
     prosthiki,
@@ -98,7 +98,7 @@ export const prothesmiesMikrodiaforon = (
     proskomidiParemv,
     prosthikiParemv,
     epidosiDetails: getEpidosiDetails(
-      start,
+      katathesi,
       epidosi,
       options ? options : optionsDefault
     ),
@@ -113,12 +113,12 @@ export const prothesmiesMikrodiaforon = (
       options ? options : optionsDefault
     ),
     paremvasiDetails: getParemvasiDetails(
-      start,
+      katathesi,
       paremvasi,
       options ? options : optionsDefault
     ),
     proskomidiParemvDetails: getProskomParemvDetails(
-      start,
+      katathesi,
       proskomidiParemv,
       options ? options : optionsDefault
     ),
@@ -131,5 +131,3 @@ export const prothesmiesMikrodiaforon = (
 
   return prothesmies;
 };
-
-console.log(prothesmiesMikrodiaforon('2022-10-02', { katoikos_code: '2' }));

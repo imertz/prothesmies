@@ -13,10 +13,10 @@ import { getAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
 // }
 export const getParemvasiProsek = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
-  let days = options?.katoikos_code === '2' ? 120 : 90;
+  let days = options?.exoterikou ? 120 : 90;
 
   let topiki = options?.topiki ?? 'Αθηνών';
 
@@ -25,7 +25,7 @@ export const getParemvasiProsek = (start: string, options: Options): string => {
   let paremvasi_prosek = getDate(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
-      ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek'),
+      ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

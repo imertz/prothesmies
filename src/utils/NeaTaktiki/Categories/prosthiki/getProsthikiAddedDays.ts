@@ -25,7 +25,7 @@ export const getProsthikiAddedDays = (
   } = { nomothesia: [], ypologismos: [], imeres: [] };
 
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -36,7 +36,7 @@ export const getProsthikiAddedDays = (
     let prosthiki = getDate(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'prosthiki'),
+        ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -52,7 +52,7 @@ export const getProsthikiAddedDays = (
     const argia = analyseArgies(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'prosthiki'),
+        ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -108,7 +108,7 @@ export const getProsthikiAddedDays = (
     const argia = analyseArgies(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'prosthiki'),
+        ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -131,7 +131,7 @@ export const getProsthikiAddedDays = (
     const argia = analyseArgies(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'prosthiki'),
+        ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
         ...argiesDimosiou,
       ]),
     });

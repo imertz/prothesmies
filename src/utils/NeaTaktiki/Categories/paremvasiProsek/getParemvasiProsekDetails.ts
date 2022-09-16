@@ -44,7 +44,7 @@ export const getParemvasiProsekDetails = (
     checkIfAnastoliDiakopon(
       start,
       prothesmia,
-      options.dimosio_code ? options.dimosio_code : '1'
+      options.dimosio ? options.dimosio : false
     )
   ) {
     text.ypologismos.push(

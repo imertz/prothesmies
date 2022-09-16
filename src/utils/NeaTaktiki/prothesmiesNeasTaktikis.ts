@@ -23,8 +23,6 @@ interface ProthesmiesNeasTaktikis {
   protaseis: string;
   prosthiki: string;
   dikasimos?: string;
-  // or_dikasti: string;
-  // or_dikasimou: string;
   opsigeneis?: string;
   opsigeneisΑntikrousi?: string;
   epidosiDetails?: {
@@ -65,55 +63,46 @@ interface ProthesmiesNeasTaktikis {
 }
 
 export const prothesmiesNeasTaktikis = (
-  start: string,
+  katathesi: string,
   options?: Options
 ): ProthesmiesNeasTaktikis => {
-  let katoikos_code = options?.katoikos_code ?? '1';
-  let dimosio_code = options?.dimosio_code ?? '1';
+  let exoterikou = options?.exoterikou ?? false;
+  let dimosio = options?.dimosio ?? false;
   let topiki = options?.topiki ?? 'Αθηνών';
   let dikasimos = options?.dikasimos ?? undefined;
   let yliki = options?.yliki ?? 'Μον';
-  let ylikiGreek = 'Μον ';
   let klisi = false;
   if (options?.klisi !== undefined) {
     klisi = options.klisi;
   }
-  if (yliki === 'Πολ') {
-    ylikiGreek = 'Πολ  ';
-  }
-  if (yliki === 'Ειρ') {
-    ylikiGreek = 'Ειρ  ';
-  }
 
   let optionsDefault: Options = {
-    katoikos_code,
-    dimosio_code,
-    topiki: `${ylikiGreek}${topiki}`,
+    exoterikou,
+    dimosio,
+    topiki,
     yliki,
     dikasimos,
     klisi,
   };
 
   if (options !== undefined) {
-    options.topiki = `${ylikiGreek}${topiki}`;
+    options.topiki = topiki;
   }
 
-  let epidosi = getEpidosi(start, options ? options : optionsDefault);
-  let paremvasi = getParemvasi(start, options ? options : optionsDefault);
+  let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
+  let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);
   let paremvasiProsek = getParemvasiProsek(
-    start,
+    katathesi,
     options ? options : optionsDefault
   );
-  let protaseis = getProtaseis(start, options ? options : optionsDefault);
+  let protaseis = getProtaseis(katathesi, options ? options : optionsDefault);
   let prosthiki = getProsthiki(protaseis, options ? options : optionsDefault);
   let opsigeneis = undefined;
   let opsigeneisΑntikrousi = undefined;
   if (
-    new Date(start).getTime() >= new Date('2022-01-01').getTime() &&
+    new Date(katathesi).getTime() >= new Date('2022-01-01').getTime() &&
     options?.dikasimos !== undefined
   ) {
-    console.log(options.dikasimos);
-
     opsigeneis = getOpsigeneis(
       options?.dikasimos,
       options ? options : optionsDefault
@@ -125,7 +114,7 @@ export const prothesmiesNeasTaktikis = (
   }
 
   const prothesmies: ProthesmiesNeasTaktikis = {
-    katathesi: start,
+    katathesi,
     epidosi,
     paremvasi,
     paremvasiProsek,
@@ -135,22 +124,22 @@ export const prothesmiesNeasTaktikis = (
     opsigeneis,
     opsigeneisΑntikrousi,
     epidosiDetails: getEpidosiDetails(
-      start,
+      katathesi,
       epidosi,
       options ? options : optionsDefault
     ),
     paremvasiDetails: getParemvasiDetails(
-      start,
+      katathesi,
       paremvasi,
       options ? options : optionsDefault
     ),
     paremvasiProsekDetails: getParemvasiProsekDetails(
-      start,
+      katathesi,
       paremvasiProsek,
       options ? options : optionsDefault
     ),
     protaseisDetails: getProtaseisDetails(
-      start,
+      katathesi,
       protaseis,
       options ? options : optionsDefault
     ),
@@ -161,8 +150,6 @@ export const prothesmiesNeasTaktikis = (
     ),
   };
   if (opsigeneis !== undefined && options?.dikasimos !== undefined) {
-    console.log(options.dikasimos);
-
     prothesmies.opsigeneisDetails = getOpsigeneisDetails(
       options.dikasimos,
       opsigeneis,
@@ -179,6 +166,4 @@ export const prothesmiesNeasTaktikis = (
   return prothesmies;
 };
 
-console.log(
-  prothesmiesNeasTaktikis('2021-10-02', { klisi: true, katoikos_code: '2' })
-);
+console.log(prothesmiesNeasTaktikis('2022-10-12'));

@@ -21,9 +21,9 @@ export const getParemvasiProsekAddedDays = (
       imeres: string[];
     } = { nomothesia: [], ypologismos: [], imeres: [] };
     let argiesDimosiou: string[] = [];
-    let days = options?.katoikos_code === '2' ? 120 : 90;
+    let days = options?.exoterikou ? 120 : 90;
 
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
     let topiki = options?.topiki ?? 'Αθηνών';
@@ -36,7 +36,11 @@ export const getParemvasiProsekAddedDays = (
     let paremvasi_prosek = getDate(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek'),
+        ...getAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
         ...argiesDimosiou,
       ]),
     });
@@ -53,7 +57,11 @@ export const getParemvasiProsekAddedDays = (
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek'),
+        ...getAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
         ...argiesDimosiou,
       ]),
     });
@@ -80,18 +88,22 @@ export const getParemvasiProsekAddedDays = (
     } = { nomothesia: [], ypologismos: [], imeres: [] };
     let argiesDimosiou: string[] = [];
 
-    if (options?.dimosio_code === '2') {
+    if (options?.dimosio) {
       argiesDimosiou = anastoliDimosiouFunc();
     }
     let topiki = options?.topiki ?? 'Αθηνών';
 
     const year = parseInt(start.slice(0, 4));
-    let days = options?.katoikos_code === '2' ? 120 : 90;
+    let days = options?.exoterikou ? 120 : 90;
 
     const argia = analyseArgies(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek'),
+        ...getAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
         ...argiesDimosiou,
       ]),
     });

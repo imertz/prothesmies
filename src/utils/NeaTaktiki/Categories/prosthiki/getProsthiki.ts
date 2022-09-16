@@ -20,7 +20,7 @@ export const getProsthiki = (
   options: Options
 ): string => {
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -30,7 +30,7 @@ export const getProsthiki = (
   let prosthiki = getDate(protaseisDate, 15, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
-      ...getAnastolesAnaDikastirio(topiki, 'prosthiki'),
+      ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
       ...argiesDimosiou,
     ]),
   });
@@ -39,8 +39,6 @@ export const getProsthiki = (
     new Date('2021-03-26') >= new Date(prosthiki) &&
     checkIfIncludedSingle(topiki)
   ) {
-    console.log('hi');
-
     prosthiki.setDate(prosthiki.getDate() + 8);
   }
   let new_prosthiki = getDate(protaseisDate, 15, {

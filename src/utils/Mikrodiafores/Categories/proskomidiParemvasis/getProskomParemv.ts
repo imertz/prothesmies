@@ -11,9 +11,9 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 // }
 export const getProskomParemv = (start: string, options?: Options): string => {
   let argiesDimosiou: string[] = [];
-  let days = options?.katoikos_code === '2' ? 50 : 30;
+  let days = options?.dimosio_code ? 50 : 30;
 
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio_code) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   const year = parseInt(start.slice(0, 4));

@@ -17,7 +17,7 @@ import {
 // }
 export const getProtaseis = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code === '2') {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -25,33 +25,33 @@ export const getProtaseis = (start: string, options: Options): string => {
   const year = parseInt(start.slice(0, 4));
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
     if (options.klisi === false) {
-      let epidosiDays = options?.katoikos_code === '2' ? 60 : 30;
+      let epidosiDays = options?.dimosio ? 60 : 30;
 
       let epidosi = getDate(start, epidosiDays, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
-          ...getAnastolesAnaDikastirio(topiki, 'epidosi'),
+          ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
           ...argiesDimosiou,
         ]),
       });
-      let days = options?.katoikos_code === '2' ? 120 : 90;
+      let days = options?.exoterikou ? 120 : 90;
 
       let protaseis = getDate(epidosi.toISOString().split('T')[0], days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
-          ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+          ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
           ...argiesDimosiou,
         ]),
       });
 
       return protaseis.toISOString().split('T')[0];
     } else {
-      let days = options?.katoikos_code === '2' ? 120 : 90;
+      let days = options?.exoterikou ? 120 : 90;
 
       let protaseis = getDate(start, days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
-          ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+          ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
           ...argiesDimosiou,
         ]),
       });
@@ -60,12 +60,12 @@ export const getProtaseis = (start: string, options: Options): string => {
     }
   } else {
     let topiki = options?.topiki ?? 'Αθηνών';
-    let days = options?.katoikos_code === '2' ? 130 : 100;
+    let days = options?.exoterikou ? 130 : 100;
 
     let protaseis = getDate(start, days, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
-        ...getAnastolesAnaDikastirio(topiki, 'protaseis'),
+        ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
