@@ -21,7 +21,7 @@ export const getProsthikiAddedDays = (
   text.imeres.push(`${days} ημέρες από την προσκομιδή των αποδεικτικών.`);
 
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code) {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 

@@ -24,7 +24,7 @@ interface ProthesmiesNeasTaktikis {
   prosthiki: string;
   dikasimos?: string;
   opsigeneis?: string;
-  opsigeneisΑntikrousi?: string;
+  opsigeneisAntikrousi?: string;
   epidosiDetails?: {
     nomothesia: string[];
     ypologismos: string[];
@@ -98,7 +98,7 @@ export const prothesmiesNeasTaktikis = (
   let protaseis = getProtaseis(katathesi, options ? options : optionsDefault);
   let prosthiki = getProsthiki(protaseis, options ? options : optionsDefault);
   let opsigeneis = undefined;
-  let opsigeneisΑntikrousi = undefined;
+  let opsigeneisAntikrousi = undefined;
   if (
     new Date(katathesi).getTime() >= new Date('2022-01-01').getTime() &&
     options?.dikasimos !== undefined
@@ -107,7 +107,7 @@ export const prothesmiesNeasTaktikis = (
       options?.dikasimos,
       options ? options : optionsDefault
     );
-    opsigeneisΑntikrousi = getAntikrousiOpsig(
+    opsigeneisAntikrousi = getAntikrousiOpsig(
       options?.dikasimos,
       options ? options : optionsDefault
     );
@@ -122,7 +122,7 @@ export const prothesmiesNeasTaktikis = (
     prosthiki,
     dikasimos: options?.dikasimos,
     opsigeneis,
-    opsigeneisΑntikrousi,
+    opsigeneisAntikrousi,
     epidosiDetails: getEpidosiDetails(
       katathesi,
       epidosi,
@@ -156,14 +156,12 @@ export const prothesmiesNeasTaktikis = (
       options ? options : optionsDefault
     );
   }
-  if (opsigeneisΑntikrousi !== undefined && options?.dikasimos !== undefined) {
+  if (opsigeneisAntikrousi !== undefined && options?.dikasimos !== undefined) {
     prothesmies.opsigeneisAntikrousiDetails = getOpsigeneisAntikrousiDetails(
       options.dikasimos,
-      opsigeneisΑntikrousi,
+      opsigeneisAntikrousi,
       options ? options : optionsDefault
     );
   }
   return prothesmies;
 };
-
-console.log(prothesmiesNeasTaktikis('2022-10-12'));

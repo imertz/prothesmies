@@ -13,12 +13,12 @@ export const getProskomParemvAddedDays = (start: string, options?: Options) => {
     ypologismos: string[];
     imeres: string[];
   } = { nomothesia: [], ypologismos: [], imeres: [] };
-  let days = options?.dimosio_code ? 50 : 30;
+  let days = options?.dimosio ? 50 : 30;
 
   text.imeres.push(`${days} ημέρες από την κατάθεση της αγωγής.`);
 
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code) {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 

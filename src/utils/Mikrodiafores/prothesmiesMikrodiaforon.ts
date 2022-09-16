@@ -66,13 +66,13 @@ export const prothesmiesMikrodiaforon = (
   katathesi: string,
   options?: Options
 ): ProthesmiesMikrodiaforon => {
-  let katoikos_code = options?.katoikos_code ?? false;
-  let dimosio_code = options?.dimosio_code ?? false;
+  let exoterikou = options?.exoterikou ?? false;
+  let dimosio = options?.dimosio ?? false;
   let topiki = options?.topiki ?? 'Αθηνών';
 
   let optionsDefault: Options = {
-    katoikos_code,
-    dimosio_code,
+    exoterikou,
+    dimosio,
     topiki,
   };
 

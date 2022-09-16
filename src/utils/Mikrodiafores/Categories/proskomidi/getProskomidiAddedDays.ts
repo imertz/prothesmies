@@ -18,7 +18,7 @@ export const getProskomidiAddedDays = (epidosi: string, options?: Options) => {
   text.imeres.push(`${days} ημέρες από την κατάθεση της αγωγής.`);
 
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code) {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 

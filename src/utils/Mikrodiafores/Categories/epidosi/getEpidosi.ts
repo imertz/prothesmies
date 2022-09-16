@@ -11,9 +11,9 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 // }
 export const getEpidosi = (start: string, options?: Options): string => {
   let argiesDimosiou: string[] = [];
-  let days = options?.katoikos_code ? 30 : 10;
+  let days = options?.exoterikou ? 30 : 10;
 
-  if (options?.dimosio_code) {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   const year = parseInt(start.slice(0, 4));

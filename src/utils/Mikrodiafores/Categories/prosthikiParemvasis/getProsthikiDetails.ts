@@ -20,7 +20,7 @@ export const getProsthParemvDetails = (
     checkIfAnastoliDiakopon(
       proskomParemv,
       prothesmia,
-      options?.dimosio_code ? options.dimosio_code : false
+      options?.dimosio ? options.dimosio : false
     )
   ) {
     text.ypologismos.push(

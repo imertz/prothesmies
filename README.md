@@ -15,14 +15,26 @@ npm install prothesmies
 ```js
 const prothesmies = require('prothesmies');
 
-const apotelesmata = prothesmies.prothesmiesNeasTaktikis('2022-02-20', {
-  dikasimos: '2022-12-14',
-  topiki: 'Αθηνών',
-  yliki: 'Ειρ',
-});
-const apotelesmataMikrodiaforon = prothesmies.prothesmiesMikrodiaforon('2022-02-20', {
-katoikos_code='2',
-});
+const apotelesmataNeasTaktikis = prothesmies.prothesmiesNeasTaktikis(
+  '2022-02-19',
+  {
+    dikasimos: '2022-11-23',
+    topiki: 'Θεσσαλονίκης',
+    yliki: 'Μον',
+    exoterikou: true,
+    dimosio: false,
+    klisi: false,
+  }
+);
+
+const apotelesmataMikrodiaforon = prothesmies.prothesmiesMikrodiaforon(
+  '2022-02-20',
+  {
+    exoterikou: true,
+    dimosio: true,
+    topiki: 'Καλλιθέας',
+  }
+);
 ```
 
 ##### In ES6 module notation:
@@ -30,25 +42,30 @@ katoikos_code='2',
 ```js
 import { prothesmiesNeasTaktikis } from 'prothesmies';
 
-const apotelesmataNTaktikis = prothesmiesNeasTaktikis('2022-02-20', {
-  dikasimos: '2022-12-14',
-  topiki: 'Αθηνών',
-  yliki: 'Ειρ',
+const apotelesmataNeasTaktikis = prothesmiesNeasTaktikis('2022-02-19', {
+  dikasimos: '2022-11-23',
+  topiki: 'Θεσσαλονίκης',
+  yliki: 'Μον',
+  exoterikou: true,
+  dimosio: false,
+  klisi: false,
 });
 
 const apotelesmataMikrodiaforon = prothesmiesMikrodiaforon('2022-02-20', {
-katoikos_code='2',
+  exoterikou: true,
+  dimosio: true,
+  topiki: 'Καλλιθέας',
 });
 ```
 
 ## Προθεσμίες Νέας Τακτικής
 
-Για να υπολογίσετε τις προθεσμίες Νέας Τακτικής χρησιμοποιείτε το function prothesmiesNeasTaktikis() που εξάξει το module. Οι παράμετροι που δέχεται το prothesmiesNeasTaktikis() είναι οι εξής:
+Για να υπολογίσετε τις προθεσμίες Νέας Τακτικής χρησιμοποιείτε το function prothesmiesNeasTaktikis() που εξάγει το module. Οι παράμετροι που δέχεται το prothesmiesNeasTaktikis() είναι οι εξής:
 
 | Όνομα       | Τύπος    | Αρχική Τιμή | Περιγραφή                                                                              |
 | ----------- | -------- | ----------- | -------------------------------------------------------------------------------------- |
 | `katathesi` | `string` | `undefined` | Η ημερομηνία **κατάθεσης** του δικογράφου σε μορφή 'ΕΕΕΕ-ΜΜ-ΗΗ' _(πχ. `'2022-02-23'`)_ |
-| `options`   | `object` | `{}`        | Δείτε [protesmiesNeasTaktikis options](#prothesmiesNeasTaktikis-options).              |
+| `options`   | `object` | `{}`        | Δείτε [protesmiesNeasTaktikis options](#prothesmiesneastaktikis-options).              |
 
 ### prothesmiesNeasTaktikis options
 
@@ -60,6 +77,25 @@ katoikos_code='2',
 | `yliki`      | `string`  | `Μον`       | `Ειρ`, `Μον`, `Πολ` αναλόγως την υλική αρμοδιότητα                                                                                                                                                                                                                                                                      |
 | `dikasimos`  | `string`  | `undefined` | Η ημερομηνία **δικασίμου** εφόσον είναι γνωστή σε μορφή 'ΕΕΕΕ-ΜΜ-ΗΗ' _(πχ. `'2022-06-28'`)_                                                                                                                                                                                                                             |
 | `klisi`      | `boolean` | `false`     | Είσαγετε `true` σε περίπτωση που κατατέθηκε κλήση για τον προσδιορισμό δικασίμου, μετά από έκδοση παραπεμπτικής απόφασης λόγω καθ’ ύλην ή κατά τόπον αναρμοδιότητας ή λόγω μη εισαγωγής της υπόθεσης κατά την προσήκουσα διαδικασίααν ή αν το δικαστήριο κήρυξε απαράδεκτη τη συζήτηση της αγωγής (Αρθ.237 παρ.3 ΚΠολΔ) |
+
+## Προθεσμίες Νέας Διαδικασίας Μικροδιαφορών
+
+Για να υπολογίσετε τις προθεσμίες Μικροδιαφορών χρησιμοποιείτε το function prothesmiesMikrodiaforon() που εξάγει το module. Οι παράμετροι που δέχεται το prothesmiesMikrodiaforon() είναι οι εξής:
+
+| Όνομα       | Τύπος    | Αρχική Τιμή | Περιγραφή                                                                              |
+| ----------- | -------- | ----------- | -------------------------------------------------------------------------------------- |
+| `katathesi` | `string` | `undefined` | Η ημερομηνία **κατάθεσης** του δικογράφου σε μορφή 'ΕΕΕΕ-ΜΜ-ΗΗ' _(πχ. `'2022-02-23'`)_ |
+| `options`   | `object` | `{}`        | Δείτε [protesmiesMikrodiaforon options](#prothesmiesmikrodiaforon-options).            |
+
+### prothesmiesMikrodiaforon options
+
+| Όνομα        | Τύπος     | Αρχική Τιμή | Περιγραφή                                                                                                                                                                                                     |
+| ------------ | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dimosio`    | `boolean` | `false`     | Σε περίπτωση που κάποιος από τους διαδίκους είναι το Δημόσιο, εισάγετε την τιμή `true`                                                                                                                        |
+| `exoterikou` | `boolean` | `false`     | Σε περίπτωση που ο διάδικος είναι κάτοικος εξωτερικού, εισάγετε την τιμή `true`                                                                                                                               |
+| `topiki`     | `string`  | `Αθηνών`    | Εισάγετε την έδρα του δικαστηρίου που σας ενδιαφέρει στην γενική _(πχ. `'Αθηνών`, `Θεσσαλονίκης`, κτλ)._ Αναλυτικά η λίστα με της τιμές που γίνονται δεκτές [εδώ](./src/utils/NeaTaktiki/Types/interfaces.ts) |
+
+|
 
 # License
 

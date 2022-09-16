@@ -23,7 +23,7 @@ export const getProsthParemvAddedDays = (
   );
 
   let argiesDimosiou: string[] = [];
-  if (options?.dimosio_code) {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 

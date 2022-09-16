@@ -13,7 +13,7 @@ export const getProsthiki = (proskomidi: string, options?: Options): string => {
   let argiesDimosiou: string[] = [];
   let days = 5;
 
-  if (options?.dimosio_code) {
+  if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   const year = parseInt(proskomidi.slice(0, 4));

@@ -56,16 +56,16 @@ export function isAugustBetween(start: string, end: string) {
 export function checkIfAnastoliDiakopon(
   start: string,
   prothesmia: any,
-  dimosio_code: boolean
+  dimosio: boolean
 ) {
-  if (!dimosio_code) {
+  if (!dimosio) {
     if (!startBetweenDiakopes(start)) {
       return isAugustBetween(start, prothesmia);
     } else {
       return false;
     }
   }
-  if (dimosio_code) {
+  if (dimosio) {
     if (!startBetweenDiakopDimosiou(start)) {
       return isAugustBetween(start, prothesmia);
     } else {
