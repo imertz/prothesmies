@@ -1,3 +1,122 @@
+import { returnDatesBetween } from '../Various/returnDatesBetween';
+
+const isLeapYear = function(year: number) {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+const getDaysInMonth = function(year: number, month: number) {
+  return [
+    31,
+    isLeapYear(year) ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ][month];
+};
+
+// Date.prototype.isLeapYear = function() {
+//   return Date.isLeapYear(this.getFullYear());
+// };
+
+// Date.prototype.getDaysInMonth = function() {
+//   return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+// };
+
+export const addMonths = function(
+  start: string,
+  noOfMonths: number,
+  argiesAndAnastoli: { argies: string[]; anastoli: string[] }
+) {
+  const startDate = new Date(start);
+
+  const n = startDate.getDate();
+  startDate.setTime(startDate.getTime() + 12 * 60 * 60 * 1000);
+  startDate.setDate(1);
+  startDate.setMonth(startDate.getMonth() + noOfMonths);
+  const minDate = Math.min(
+    n,
+    getDaysInMonth(startDate.getFullYear(), startDate.getMonth())
+  );
+  let correctDate = minDate < n ? 1 : minDate;
+  minDate < n && startDate.setMonth(startDate.getMonth() + 1);
+  let dateWithCorrectDay = new Date(startDate.setDate(correctDate));
+  let dateWithoutAnastoli = dateWithCorrectDay;
+
+  let isDateInAnastoliCount = [];
+  let datesBetween = returnDatesBetween(
+    start,
+    dateWithCorrectDay.toISOString().slice(0, 10)
+  );
+
+  for (let index = 0; index < datesBetween.length; index++) {
+    if (argiesAndAnastoli.anastoli.includes(datesBetween[index])) {
+      isDateInAnastoliCount.push(datesBetween[index]);
+      do {
+        const lastDate: Date = new Date(isDateInAnastoliCount.at(-1) as string);
+        isDateInAnastoliCount.push(
+          new Date(lastDate.setTime(lastDate.getTime() + 24 * 60 * 60 * 1000))
+            .toISOString()
+            .slice(0, 10)
+        );
+      } while (
+        argiesAndAnastoli.anastoli.includes(
+          isDateInAnastoliCount.at(-1) as string
+        )
+      );
+    }
+  }
+  isDateInAnastoliCount = [...new Set(isDateInAnastoliCount)];
+  isDateInAnastoliCount.pop();
+
+  if (
+    datesBetween.at(-1)
+      ? datesBetween.at(-1)
+      : '0' >= dateWithCorrectDay.toISOString().slice(0, 10)
+  ) {
+    dateWithCorrectDay = new Date(datesBetween.at(-1)!!);
+  }
+
+  dateWithCorrectDay.setTime(
+    dateWithCorrectDay.getTime() +
+      isDateInAnastoliCount.length * 24 * 60 * 60 * 1000
+  );
+  let firstArgia = '';
+
+  while (
+    [...argiesAndAnastoli.argies, ...argiesAndAnastoli.anastoli].findIndex(
+      r =>
+        new Date(r).toDateString() ===
+        new Date(dateWithCorrectDay).toDateString()
+    ) !== -1
+  ) {
+    if (firstArgia === '') {
+      firstArgia = dateWithCorrectDay.toISOString().slice(0, 10);
+    }
+    dateWithCorrectDay.setTime(dateWithCorrectDay.getTime() + 24 * 3600 * 1000);
+  }
+
+  return { correctDate: dateWithCorrectDay, dateWithoutAnastoli, firstArgia };
+};
+
+// export function addMonths(
+//   start: string,
+//   noOfMonths: number
+//   // argiesAndAnastoli: { argies: string[]; anastoli: string[] }
+// ) {
+//   const startDate = new Date(start);
+//   const dateWithAddedMonths = new Date(
+//     startDate.setMonth(startDate.getMonth() + noOfMonths)
+//   );
+//   return dateWithAddedMonths;
+// }
+
 export function getDate(
   start: string,
   noOfDays: number,
