@@ -9,21 +9,19 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 // interface Options {
 //   dimosio?: boolean;
 // }
-export const getProsthParemv = (
-  proskParemv: string,
-  options?: Options
-): string => {
+export const getAnakopi = (epidosi: string, options?: Options): string => {
   let argiesDimosiou: string[] = [];
-  let days = 5;
+  let days = options?.exoterikou ? 30 : 15;
+  days = options?.dimosio ? 30 : days;
 
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
-  const year = parseInt(proskParemv.slice(0, 4));
-  let prosthParemv = getDate(proskParemv, days, {
+  const year = parseInt(epidosi.slice(0, 4));
+  let anakopi = getDate(epidosi, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
   });
 
-  return prosthParemv.toISOString().split('T')[0];
+  return anakopi.toISOString().split('T')[0];
 };

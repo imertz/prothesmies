@@ -7,24 +7,25 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
 
-export const getProskomParemvAddedDays = (start: string, options?: Options) => {
+export const getAnakopiAddedDays = (epidosi: string, options?: Options) => {
   let text: {
     nomothesia: string[];
     ypologismos: string[];
     imeres: string[];
   } = { nomothesia: [], ypologismos: [], imeres: [] };
-  let days = options?.dimosio ? 50 : 30;
+  let days = options?.exoterikou ? 30 : 15;
+  days = options?.dimosio ? 30 : days;
 
-  text.imeres.push(`${days} ημέρες από την κατάθεση της αγωγής.`);
+  text.imeres.push(`${days} ημέρες από την επίδοση της διαταγής πληρωμής.`);
 
   let argiesDimosiou: string[] = [];
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 
-  const year = parseInt(start.slice(0, 4));
+  const year = parseInt(epidosi.slice(0, 4));
 
-  const argia = analyseArgies(start, days, {
+  const argia = analyseArgies(epidosi, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
   });

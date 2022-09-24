@@ -1,71 +1,40 @@
+import { checkValidDate } from '../Various/checkValidDate';
+import { getAnakopi } from './Categories/anakopi/getAnakopi';
+import { getAnakopiDetails } from './Categories/anakopi/getAnakopiDetails';
 import { getEpidosi } from './Categories/epidosi/getEpidosi';
 import { getEpidosiDetails } from './Categories/epidosi/getEpidosiDetails';
 
-// import { getParemvasi } from './Categories/paremvasi/getParemvasi';
-// import { getParemvasiDetails } from './Categories/paremvasi/getParemvasiDetails';
-
-// import { getProskomidi } from './Categories/proskomidi/getProskomidi';
-// import { getProskomidiDetails } from './Categories/proskomidi/getProskomidiDetails';
-
-// import { getProskomParemv } from './Categories/proskomidiParemvasis/getProskomParemv';
-// import { getProskomParemvDetails } from './Categories/proskomidiParemvasis/getProskomParemvDetails';
-
-// import { getProsthiki } from './Categories/prosthiki/getProsthiki';
-// import { getProsthikiDetails } from './Categories/prosthiki/getProsthikiDetails';
-
-// import { getProsthParemv } from './Categories/prosthikiParemvasis/getProsthParemv';
-// import { getProsthParemvDetails } from './Categories/prosthikiParemvasis/getProsthikiDetails';
 import { Options } from './Types/interfaces';
 
 interface ProthesmiesMikrodiaforon {
   katathesi: string;
   epidosi: string;
-  // proskomidi: string;
-  // prosthiki: string;
-  // paremvasi: string;
-  // proskomidiParemv: string;
-  // prosthikiParemv: string;
-  // katathesiDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
+  anakopi?: string;
+
   epidosiDetails?: {
     nomothesia: string[];
     ypologismos: string[];
     imeres: string[];
   };
-  // proskomidiDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
-  // prosthikiDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
-  // paremvasiDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
-  // proskomidiParemvDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
-  // prosthikiParemvDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
+  anakopiDetails?: {
+    nomothesia: string[];
+    ypologismos: string[];
+    imeres: string[];
+  };
 }
 
 export const prothesmiesDiatPliromis = (
   katathesi: string,
   options?: Options
 ): ProthesmiesMikrodiaforon => {
+  if (!checkValidDate(katathesi)) {
+    throw new Error(
+      "Πρέπει να εισάγετε έγκυρη ημερομηνία της μορφής 'ΕΕΕΕ-ΜΜ-ΗΗ' (πχ. '2022-04-28')"
+    );
+  }
+  if (katathesi < '2022-02-01') {
+    throw new Error('Επιτρέπονται οι ημερομηνίες από 01.02.2022 και έπειτα.');
+  }
   let exoterikou = options?.exoterikou ?? false;
   let dimosio = options?.dimosio ?? false;
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -77,59 +46,39 @@ export const prothesmiesDiatPliromis = (
   };
 
   let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
-  // let proskomidi = getProskomidi(epidosi, options ? options : optionsDefault);
-  // let prosthiki = getProsthiki(proskomidi, options ? options : optionsDefault);
-  // let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);
-  // let proskomidiParemv = getProskomParemv(
-  //   katathesi,
-  //   options ? options : optionsDefault
-  // );
-  // let prosthikiParemv = getProsthParemv(
-  //   proskomidiParemv,
-  //   options ? options : optionsDefault
-  // );
+  let anakopi = '';
+  if (options?.epidosiDone !== undefined) {
+    anakopi = getAnakopi(
+      options?.epidosiDone,
+      options ? options : optionsDefault
+    );
+  }
 
   const prothesmies: ProthesmiesMikrodiaforon = {
     katathesi,
     epidosi,
-    // proskomidi,
-    // prosthiki,
-    // paremvasi,
-    // proskomidiParemv,
-    // prosthikiParemv,
     epidosiDetails: getEpidosiDetails(
       katathesi,
       epidosi,
       options ? options : optionsDefault
     ),
-    // proskomidiDetails: getProskomidiDetails(
-    //   epidosi,
-    //   proskomidi,
-    //   options ? options : optionsDefault
-    // ),
-    // prosthikiDetails: getProsthikiDetails(
-    //   proskomidi,
-    //   prosthiki,
-    //   options ? options : optionsDefault
-    // ),
-    // paremvasiDetails: getParemvasiDetails(
-    //   katathesi,
-    //   paremvasi,
-    //   options ? options : optionsDefault
-    // ),
-    // proskomidiParemvDetails: getProskomParemvDetails(
-    //   katathesi,
-    //   proskomidiParemv,
-    //   options ? options : optionsDefault
-    // ),
-    // prosthikiParemvDetails: getProsthParemvDetails(
-    //   proskomidiParemv,
-    //   prosthiki,
-    //   options ? options : optionsDefault
-    // ),
   };
+  if (options?.epidosiDone) {
+    prothesmies.anakopi = anakopi;
+    prothesmies.anakopiDetails = getAnakopiDetails(
+      options?.epidosiDone,
+      anakopi,
+      options ? options : optionsDefault
+    );
+  }
 
   return prothesmies;
 };
 
-console.log(prothesmiesDiatPliromis('2022-05-30'));
+console.log(
+  prothesmiesDiatPliromis('2022-05-30', {
+    epidosiDone: '2022-06-24',
+    dimosio: false,
+    exoterikou: true,
+  })
+);

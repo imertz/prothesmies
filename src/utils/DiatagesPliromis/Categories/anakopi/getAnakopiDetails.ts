@@ -1,9 +1,9 @@
 import { Options } from '../../Types/interfaces';
 import { checkIfAnastoliDiakopon } from '../../../Various/checkEarlierOrLaterDate';
-import { getEpidosiAddedDays } from './getEpidosiAddedDays';
+import { getAnakopiAddedDays } from './getAnakopiAddedDays';
 
-export const getEpidosiDetails = (
-  start: string,
+export const getAnakopiDetails = (
+  epidosi: string,
   prothesmia: string,
   options?: Options
 ) => {
@@ -13,7 +13,7 @@ export const getEpidosiDetails = (
     imeres: string[];
   } = { nomothesia: [], ypologismos: [], imeres: [] };
   text.nomothesia = [
-    `Αρθ.630Α ΚΠολΔ. Η διαταγή πληρωμής επιδίδεται σε εκείνον κατά του οποίου στρέφεται μέσα σε προθεσμία δύο μηνών από την έκδοσή της. Αν η επίδοση δεν γίνει μέσα στην προθεσμία των δύο μηνών, η διαταγή πληρωμής παύει να ισχύει.\nΕφαρμόζεται αναλογικά η ΚΠολΔ 147 παρ.2, επομένως η προθεσμία υπόκειται στην αναστολή από 1 έως 31 Αυγούστου.`,
+    `Αρθ.632 παρ. 2 ΚΠολΔ. Η προθεσμία για την άσκηση της ανακοπής είναι δεκαπέντε (15) εργάσιμες ημέρες αν η διαταγή πληρωμής έχει εκδοθεί κατά προσώπου που έχει την διαμονή ή την έδρα του στην Ελλάδα και τριάντα (30) εργάσιμες ημέρες αν η διαταγή πληρωμής έχει εκδοθεί κατά προσώπου που έχει τη διαμονή ή την έδρα του στο εξωτερικό ή η διαμονή του είναι άγνωστη.`,
   ];
   if (options?.dimosio) {
     text.nomothesia.push(
@@ -23,7 +23,7 @@ export const getEpidosiDetails = (
 
   if (
     checkIfAnastoliDiakopon(
-      start,
+      epidosi,
       prothesmia,
       options?.dimosio ? options.dimosio : false
     )
@@ -34,7 +34,7 @@ export const getEpidosiDetails = (
         : 'Εξαιρέθηκε από τον υπολογισμό το διάστημα από 1η έως 31η Αυγούστου λόγω δικαστικών διακοπών.'
     );
   }
-  const addedDaysText = getEpidosiAddedDays(start, options);
+  const addedDaysText = getAnakopiAddedDays(epidosi, options);
   text.ypologismos = [...text.ypologismos, ...addedDaysText.ypologismos];
   text.imeres = addedDaysText.imeres;
 
