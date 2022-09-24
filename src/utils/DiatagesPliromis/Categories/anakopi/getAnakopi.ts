@@ -17,7 +17,7 @@ export const getAnakopi = (epidosi: string, options?: Options): string => {
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
-  const year = parseInt(epidosi.slice(0, 4));
+  const year = parseInt(epidosi?.slice(0, 4));
   let anakopi = getDate(epidosi, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
