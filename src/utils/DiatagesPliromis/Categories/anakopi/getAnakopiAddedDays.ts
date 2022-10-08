@@ -16,7 +16,9 @@ export const getAnakopiAddedDays = (epidosi: string, options?: Options) => {
   let days = options?.exoterikou ? 30 : 15;
   days = options?.dimosio ? 30 : days;
 
-  text.imeres.push(`${days} ημέρες από την επίδοση της διαταγής πληρωμής.`);
+  text.imeres.push(
+    `${days} εργάσιμες ημέρες από την επίδοση της διαταγής πληρωμής.`
+  );
 
   let argiesDimosiou: string[] = [];
   if (options?.dimosio) {
