@@ -76,9 +76,5 @@ export const prothesmiesDiatPliromis = (
 };
 
 console.log(
-  prothesmiesDiatPliromis('2022-05-30', {
-    epidosiDone: '2022-06-24',
-    dimosio: false,
-    exoterikou: true,
-  })
+  prothesmiesDiatPliromis('2022-12-05', { epidosiDone: '2022-12-10' })
 );

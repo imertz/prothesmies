@@ -1,4 +1,4 @@
-import { getDate } from '../../../CalculateDates/calculateDate';
+import { getDateErgasimesOnly } from '../../../CalculateDates/calculateDate';
 import { argiesFunc } from '../../../ArgiesAndAnastoli/ArgiesFunc';
 import { addArgAndAnastDays } from '../../../Various/addAndRemoveDays';
 import { anastoliFunc } from '../../../ArgiesAndAnastoli/AnastoliFunc';
@@ -18,7 +18,7 @@ export const getAnakopi = (epidosi: string, options?: Options): string => {
     argiesDimosiou = anastoliDimosiouFunc();
   }
   const year = parseInt(epidosi?.slice(0, 4));
-  let anakopi = getDate(epidosi, days, {
+  let anakopi = getDateErgasimesOnly(epidosi, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
   });
