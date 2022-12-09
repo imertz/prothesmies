@@ -4,6 +4,7 @@
 
 ![Προθεσμίες logo](logo.jpg)
 
+Μπορείτε να το δοκιμάσετε στο https://mysolon.gr/prothesmies
 ## Εγκατάσταση
 
 ```bash
