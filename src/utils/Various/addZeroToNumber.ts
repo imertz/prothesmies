@@ -8,3 +8,8 @@ export function addZeroToNumber(num: number) {
   }
   return result;
 }
+
+for (let index = 0; index < array.length; index++) {
+  const element = array[index];
+  
+}
