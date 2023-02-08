@@ -105,6 +105,13 @@ export const getProsthiki = (
     ) {
       return '2023-02-13';
     }
+    if (
+      (prosthiki.toISOString().split('T')[0] === '2023-02-08' ||
+        prosthiki.toISOString().split('T')[0] === '2023-02-09') &&
+      barbaraCheckIfIncludedSingle(topiki)
+    ) {
+      return '2023-02-14';
+    }
     prosthiki = getDate(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [

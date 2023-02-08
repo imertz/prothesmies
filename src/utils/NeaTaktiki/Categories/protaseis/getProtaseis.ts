@@ -57,9 +57,14 @@ export const getProtaseis = (start: string, options: Options): string => {
           protaseis.toISOString().split('T')[0] === '2023-02-07') &&
         barbaraCheckIfIncludedSingle(topiki)
       ) {
-        console.log('2023-02-13');
-
         return '2023-02-13';
+      }
+      if (
+        (protaseis.toISOString().split('T')[0] === '2023-02-08' ||
+          protaseis.toISOString().split('T')[0] === '2023-02-09') &&
+        barbaraCheckIfIncludedSingle(topiki)
+      ) {
+        return '2023-02-14';
       }
       protaseis = getDate(epidosi.toISOString().split('T')[0], days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
@@ -92,9 +97,14 @@ export const getProtaseis = (start: string, options: Options): string => {
           protaseis.toISOString().split('T')[0] === '2023-02-07') &&
         barbaraCheckIfIncludedSingle(topiki)
       ) {
-        console.log('2023-02-13');
-
         return '2023-02-13';
+      }
+      if (
+        (protaseis.toISOString().split('T')[0] === '2023-02-08' ||
+          protaseis.toISOString().split('T')[0] === '2023-02-09') &&
+        barbaraCheckIfIncludedSingle(topiki)
+      ) {
+        return '2023-02-14';
       }
       protaseis = getDate(start, days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
