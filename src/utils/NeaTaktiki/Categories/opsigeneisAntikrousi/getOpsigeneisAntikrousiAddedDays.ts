@@ -6,7 +6,10 @@ import { extraArgies } from '../../../ArgiesAndAnastoli/extraArgies';
 import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
-import { getAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
+import {
+  barbaraGetAnastolesAnaDikastirio,
+  getAnastolesAnaDikastirio,
+} from '../../../Dikastiria/dikastiria';
 
 // interface Options {
 //   dimosio?: boolean;
@@ -42,6 +45,11 @@ export const getOpsigeneiAntikrousisAddedDays = (
       ),
       ...argiesDimosiou,
     ]),
+    ...barbaraGetAnastolesAnaDikastirio(
+      topiki,
+      'opsigeneis_antikrousi',
+      options?.yliki
+    ),
   });
 
   let dayOfWeek = '';

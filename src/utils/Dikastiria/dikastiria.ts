@@ -1,4 +1,7 @@
-import { legalAnalysis } from '../LegalAnalysis/legalAnalysis';
+import {
+  barbaraLegalAnalysis,
+  legalAnalysis,
+} from '../LegalAnalysis/legalAnalysis';
 import { returnDatesBetween } from '../Various/returnDatesBetween';
 
 export const dikastiria = [
@@ -847,6 +850,30 @@ export function getAnastolesAnaDikastirio(
   let fixedDikastirio = `${ylikiDefault} ${dikastirio}`;
 
   return legalAnalysis
+    .filter(r =>
+      checkIfIncluded(
+        fixedDikastirio,
+        normalizePeriohesWithExceptions(r.periohes, r.exceptions)
+      )
+    )
+    .filter(i => i.eidos.includes(eidos) || i.eidos.includes('all'))
+    .map(k => {
+      return [...returnDatesBetween(k.dates_start, k.dates_end)];
+    })
+    .flat();
+}
+export function barbaraGetAnastolesAnaDikastirio(
+  dikastirio: string,
+  eidos: string,
+  yliki?: string
+) {
+  let ylikiDefault = 'Μον';
+  if (yliki !== undefined) {
+    ylikiDefault = yliki;
+  }
+  let fixedDikastirio = `${ylikiDefault} ${dikastirio}`;
+
+  return barbaraLegalAnalysis
     .filter(r =>
       checkIfIncluded(
         fixedDikastirio,

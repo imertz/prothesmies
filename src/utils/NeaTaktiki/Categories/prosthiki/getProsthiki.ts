@@ -7,10 +7,12 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import {
+  barbaraGetAnastolesAnaDikastirio,
   checkIfIncluded,
   getAnastolesAnaDikastirio,
   normalizePeriohesWithExceptions,
 } from '../../../Dikastiria/dikastiria';
+import { barbaraCheckIfIncludedSingle } from '../../Anastoles/prosthikiHmeronBarbara2023';
 
 // interface Options {
 //   dimosio?: boolean;
@@ -86,12 +88,38 @@ export const getProsthiki = (
       }
     );
   }
-  if (
-    (prosthiki.toISOString().split('T')[0] === '2023-02-06' ||
-      prosthiki.toISOString().split('T')[0] === '2023-02-07') &&
-    topiki === 'Αθηνών'
-  ) {
-    return '2023-02-13';
+
+  if (new Date(protaseisDate).getTime() >= new Date('2023-01-01').getTime()) {
+    prosthiki = getDate(protaseisDate, 15, {
+      argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [
+        ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
+        ...argiesDimosiou,
+      ]),
+    });
+
+    if (
+      (prosthiki.toISOString().split('T')[0] === '2023-02-06' ||
+        prosthiki.toISOString().split('T')[0] === '2023-02-07') &&
+      barbaraCheckIfIncludedSingle(topiki)
+    ) {
+      return '2023-02-13';
+    }
+    prosthiki = getDate(protaseisDate, 15, {
+      argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [
+        ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
+        ...barbaraGetAnastolesAnaDikastirio(
+          topiki,
+          'prosthiki',
+          options?.yliki
+        ),
+        ...argiesDimosiou,
+      ]),
+    });
+
+    return prosthiki.toISOString().split('T')[0];
   }
+
   return prosthiki.toISOString().split('T')[0];
 };

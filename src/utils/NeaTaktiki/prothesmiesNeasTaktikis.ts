@@ -88,6 +88,9 @@ export const prothesmiesNeasTaktikis = (
   if (options !== undefined) {
     options.topiki = topiki;
   }
+  if (options && options?.klisi === undefined) {
+    options.klisi = klisi;
+  }
 
   let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
   let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);

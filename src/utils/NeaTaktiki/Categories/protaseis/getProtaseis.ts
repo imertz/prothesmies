@@ -7,10 +7,12 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import {
+  barbaraGetAnastolesAnaDikastirio,
   checkIfIncluded,
   getAnastolesAnaDikastirio,
   normalizePeriohesWithExceptions,
 } from '../../../Dikastiria/dikastiria';
+import { barbaraCheckIfIncludedSingle } from '../../Anastoles/prosthikiHmeronBarbara2023';
 
 // interface Options {
 //   dimosio?: boolean;
@@ -31,6 +33,11 @@ export const getProtaseis = (start: string, options: Options): string => {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
           ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+          ...barbaraGetAnastolesAnaDikastirio(
+            topiki,
+            'epidosi',
+            options?.yliki
+          ),
           ...argiesDimosiou,
         ]),
       });
@@ -43,17 +50,35 @@ export const getProtaseis = (start: string, options: Options): string => {
           ...argiesDimosiou,
         ]),
       });
+      console.log(protaseis.toISOString().split('T')[0]);
+
       if (
         (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
           protaseis.toISOString().split('T')[0] === '2023-02-07') &&
-        topiki === 'Αθηνών'
+        barbaraCheckIfIncludedSingle(topiki)
       ) {
+        console.log('2023-02-13');
+
         return '2023-02-13';
       }
+      protaseis = getDate(epidosi.toISOString().split('T')[0], days, {
+        argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(year), [
+          ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
+          ...barbaraGetAnastolesAnaDikastirio(
+            topiki,
+            'protaseis',
+            options?.yliki
+          ),
+          ...argiesDimosiou,
+        ]),
+      });
+      console.log(protaseis.toISOString().split('T')[0]);
 
       return protaseis.toISOString().split('T')[0];
     } else {
       let days = options?.exoterikou ? 120 : 90;
+      console.log(days);
 
       let protaseis = getDate(start, days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
@@ -65,10 +90,24 @@ export const getProtaseis = (start: string, options: Options): string => {
       if (
         (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
           protaseis.toISOString().split('T')[0] === '2023-02-07') &&
-        topiki === 'Αθηνών'
+        barbaraCheckIfIncludedSingle(topiki)
       ) {
+        console.log('2023-02-13');
+
         return '2023-02-13';
       }
+      protaseis = getDate(start, days, {
+        argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(year), [
+          ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
+          ...barbaraGetAnastolesAnaDikastirio(
+            topiki,
+            'protaseis',
+            options?.yliki
+          ),
+          ...argiesDimosiou,
+        ]),
+      });
 
       return protaseis.toISOString().split('T')[0];
     }
@@ -141,14 +180,6 @@ export const getProtaseis = (start: string, options: Options): string => {
           anastoli: anastoliFunc(),
         }
       );
-    }
-    // Check if the date is '2023-02-06' or '2023-02-07'
-    if (
-      (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
-        protaseis.toISOString().split('T')[0] === '2023-02-07') &&
-      topiki === 'Αθηνών'
-    ) {
-      return '2023-02-13';
     }
 
     return protaseis.toISOString().split('T')[0];

@@ -8,7 +8,10 @@ import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import { earlierThan } from '../../../Various/checkEarlierOrLaterDate';
 import { reverseDate } from '../../../Various/reverseDate';
-import { getAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
+import {
+  barbaraGetAnastolesAnaDikastirio,
+  getAnastolesAnaDikastirio,
+} from '../../../Dikastiria/dikastiria';
 
 export const getParemvasiProsekAddedDays = (
   start: string,
@@ -41,6 +44,11 @@ export const getParemvasiProsekAddedDays = (
           'paremvasi_prosek',
           options?.yliki
         ),
+        ...barbaraGetAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
         ...argiesDimosiou,
       ]),
     });
@@ -58,6 +66,11 @@ export const getParemvasiProsekAddedDays = (
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
         ...getAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
+        ...barbaraGetAnastolesAnaDikastirio(
           topiki,
           'paremvasi_prosek',
           options?.yliki
@@ -100,6 +113,11 @@ export const getParemvasiProsekAddedDays = (
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
         ...getAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
+        ...barbaraGetAnastolesAnaDikastirio(
           topiki,
           'paremvasi_prosek',
           options?.yliki

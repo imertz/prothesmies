@@ -1,5 +1,8 @@
 import { Options } from '../../Types/interfaces';
-import { legalAnalysis } from '../../../LegalAnalysis/legalAnalysis';
+import {
+  barbaraLegalAnalysis,
+  legalAnalysis,
+} from '../../../LegalAnalysis/legalAnalysis';
 import {
   checkIfAnastoliDiakopon,
   earlierThan,
@@ -14,7 +17,7 @@ export const getEpidosiDetails = (
   options: Options
 ) => {
   let topiki = options?.topiki ?? 'Αθηνών';
-  const filtered = legalAnalysis.filter(
+  const filtered = [...legalAnalysis, ...barbaraLegalAnalysis].filter(
     r =>
       checkIfIncluded(topiki, r.periohes) &&
       (r.eidos.includes('epidosi') || r.eidos.includes('all'))
