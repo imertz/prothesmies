@@ -43,6 +43,13 @@ export const getProtaseis = (start: string, options: Options): string => {
           ...argiesDimosiou,
         ]),
       });
+      if (
+        (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
+          protaseis.toISOString().split('T')[0] === '2023-02-07') &&
+        topiki === 'Αθηνών'
+      ) {
+        return '2023-02-13';
+      }
 
       return protaseis.toISOString().split('T')[0];
     } else {
@@ -55,6 +62,13 @@ export const getProtaseis = (start: string, options: Options): string => {
           ...argiesDimosiou,
         ]),
       });
+      if (
+        (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
+          protaseis.toISOString().split('T')[0] === '2023-02-07') &&
+        topiki === 'Αθηνών'
+      ) {
+        return '2023-02-13';
+      }
 
       return protaseis.toISOString().split('T')[0];
     }
@@ -128,6 +142,15 @@ export const getProtaseis = (start: string, options: Options): string => {
         }
       );
     }
+    // Check if the date is '2023-02-06' or '2023-02-07'
+    if (
+      (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
+        protaseis.toISOString().split('T')[0] === '2023-02-07') &&
+      topiki === 'Αθηνών'
+    ) {
+      return '2023-02-13';
+    }
+
     return protaseis.toISOString().split('T')[0];
   }
 };

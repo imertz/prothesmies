@@ -86,5 +86,12 @@ export const getProsthiki = (
       }
     );
   }
+  if (
+    (prosthiki.toISOString().split('T')[0] === '2023-02-06' ||
+      prosthiki.toISOString().split('T')[0] === '2023-02-07') &&
+    topiki === 'Αθηνών'
+  ) {
+    return '2023-02-13';
+  }
   return prosthiki.toISOString().split('T')[0];
 };

@@ -7,7 +7,7 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
 
-export const getProskomidiAddedDays = (epidosi: string, options?: Options) => {
+export const getProskomidiAddedDays = (start: string, options?: Options) => {
   let text: {
     nomothesia: string[];
     ypologismos: string[];
@@ -22,9 +22,9 @@ export const getProskomidiAddedDays = (epidosi: string, options?: Options) => {
     argiesDimosiou = anastoliDimosiouFunc();
   }
 
-  const year = parseInt(epidosi.slice(0, 4));
+  const year = parseInt(start.slice(0, 4));
 
-  const argia = analyseArgies(epidosi, days, {
+  const argia = analyseArgies(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
     anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
   });

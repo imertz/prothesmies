@@ -4,7 +4,7 @@ import { statheresArgiesFunc } from './StatheresFunc';
 export function argiesFunc(year?: number) {
   const arr = [];
   if (year) {
-    for (let i = year - 4; i <= year + 5; i++) {
+    for (let i = year - 1; i <= year + 1; i++) {
       arr.push(kinitesArgiesFunc(i));
       arr.push(statheresArgiesFunc(i));
     }

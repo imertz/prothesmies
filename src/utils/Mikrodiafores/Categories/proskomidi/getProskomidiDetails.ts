@@ -3,7 +3,7 @@ import { checkIfAnastoliDiakopon } from '../../../Various/checkEarlierOrLaterDat
 import { getProskomidiAddedDays } from './getProskomidiAddedDays';
 
 export const getProskomidiDetails = (
-  epidosi: string,
+  start: string,
   prothesmia: string,
   options?: Options
 ) => {
@@ -18,7 +18,7 @@ export const getProskomidiDetails = (
 
   if (
     checkIfAnastoliDiakopon(
-      epidosi,
+      start,
       prothesmia,
       options?.dimosio ? options.dimosio : false
     )
@@ -27,7 +27,7 @@ export const getProskomidiDetails = (
       'Εξαιρέθηκαν οι ημερομηνίες της αναστολής λόγω δικαστικών διακοπών.'
     );
   }
-  const addedDaysText = getProskomidiAddedDays(epidosi, options);
+  const addedDaysText = getProskomidiAddedDays(start, options);
   text.ypologismos = [...text.ypologismos, ...addedDaysText.ypologismos];
   text.imeres = addedDaysText.imeres;
 

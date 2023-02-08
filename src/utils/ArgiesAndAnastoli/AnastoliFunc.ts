@@ -3,7 +3,7 @@ import { addZeroToNumber as addZero } from '../Various/addZeroToNumber';
 export function anastoliFunc(year?: number) {
   const arr = [];
   if (year) {
-    for (let i = year - 4; i <= year + 5; i++) {
+    for (let i = year - 1; i <= year + 1; i++) {
       for (let k = 1; k <= 31; k++) {
         arr.push(`${i}-08-${addZero(k)}`);
       }

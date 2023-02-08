@@ -128,11 +128,7 @@ export function getDate(
   for (var i = 0; i < noOfDays; i) {
     dt.setTime(dt.getTime() + 24 * 3600 * 1000);
 
-    if (
-      argiesAndAnastoli.anastoli.findIndex(
-        r => r === dt.toISOString().split('T')[0]
-      ) === -1
-    ) {
+    if (!argiesAndAnastoli.anastoli.includes(dt.toISOString().split('T')[0])) {
       arr.push(new Date(dt));
       i++;
     }
@@ -232,11 +228,7 @@ export function analyseArgies(
   for (var i = 0; i < noOfDays; i) {
     dt.setTime(dt.getTime() + 24 * 3600 * 1000);
 
-    if (
-      argiesAndAnastoli.anastoli.findIndex(
-        r => r === dt.toISOString().split('T')[0]
-      ) === -1
-    ) {
+    if (!argiesAndAnastoli.anastoli.includes(dt.toISOString().split('T')[0])) {
       arr.push(new Date(dt));
       i++;
     }
