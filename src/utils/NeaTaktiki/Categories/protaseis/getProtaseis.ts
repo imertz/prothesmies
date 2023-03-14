@@ -21,13 +21,14 @@ export const getProtaseis = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
+    console.log(argiesDimosiou.filter(x => x.includes('2023')));
   }
   let topiki = options?.topiki ?? 'Αθηνών';
 
   const year = parseInt(start.slice(0, 4));
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
     if (options.klisi === false) {
-      let epidosiDays = options?.dimosio ? 60 : 30;
+      let epidosiDays = options?.exoterikou ? 60 : 30;
 
       let epidosi = getDate(start, epidosiDays, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),

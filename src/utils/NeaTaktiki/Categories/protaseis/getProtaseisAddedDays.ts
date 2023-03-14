@@ -159,7 +159,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
     let days;
     if (options.klisi === false) {
-      let epidosiDays = options?.dimosio ? 60 : 30;
+      let epidosiDays = options?.exoterikou ? 60 : 30;
       let argiesDimosiou: string[] = [];
       if (options?.dimosio) {
         argiesDimosiou = anastoliDimosiouFunc();

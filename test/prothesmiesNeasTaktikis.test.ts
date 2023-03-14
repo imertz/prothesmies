@@ -13,10 +13,10 @@ import { prothesmiesNeasTaktikis } from '../src/utils/NeaTaktiki/prothesmiesNeas
 describe('Υπολογισμός Προθεσμιών Νέας Τακτικής', () => {
   it('works', () => {
     expect(
-      prothesmiesNeasTaktikis('2023-01-23', {
+      prothesmiesNeasTaktikis('2023-09-15', {
         topiki: 'Θεσσαλονίκης',
         exoterikou: false,
-        dimosio: false,
+        dimosio: true,
       })
     ).toEqual({
       katathesi: '2022-06-19',
