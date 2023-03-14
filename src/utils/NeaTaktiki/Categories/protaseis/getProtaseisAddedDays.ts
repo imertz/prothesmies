@@ -17,8 +17,6 @@ import { reverseDate } from '../../../Various/reverseDate';
 import { barbaraCheckIfIncludedSingle } from '../../Anastoles/prosthikiHmeronBarbara2023';
 
 export const getProtaseisAddedDays = (start: string, options: Options) => {
-  console.log(options);
-
   let text: {
     nomothesia: string[];
     ypologismos: string[];

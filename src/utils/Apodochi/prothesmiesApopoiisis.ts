@@ -46,9 +46,3 @@ export const prothesmiesApopoiisis = (
 
   return prothesmies;
 };
-
-console.log(
-  prothesmiesApopoiisis('2022-05-30', {
-    exoterikou: true,
-  })
-);

@@ -50,7 +50,6 @@ export const getProtaseis = (start: string, options: Options): string => {
           ...argiesDimosiou,
         ]),
       });
-      console.log(protaseis.toISOString().split('T')[0]);
 
       if (
         (protaseis.toISOString().split('T')[0] === '2023-02-06' ||
@@ -78,12 +77,10 @@ export const getProtaseis = (start: string, options: Options): string => {
           ...argiesDimosiou,
         ]),
       });
-      console.log(protaseis.toISOString().split('T')[0]);
 
       return protaseis.toISOString().split('T')[0];
     } else {
       let days = options?.exoterikou ? 120 : 90;
-      console.log(days);
 
       let protaseis = getDate(start, days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
