@@ -77,11 +77,11 @@ export const prothesmiesMikrodiaforon = (
   };
 
   let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
-  let proskomidi = getProskomidi(katathesi, options ? options : optionsDefault);
+  let proskomidi = getProskomidi(epidosi, options ? options : optionsDefault);
   let prosthiki = getProsthiki(proskomidi, options ? options : optionsDefault);
   let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);
   let proskomidiParemv = getProskomParemv(
-    katathesi,
+    paremvasi,
     options ? options : optionsDefault
   );
   let prosthikiParemv = getProsthParemv(
@@ -103,7 +103,7 @@ export const prothesmiesMikrodiaforon = (
       options ? options : optionsDefault
     ),
     proskomidiDetails: getProskomidiDetails(
-      katathesi,
+      epidosi,
       proskomidi,
       options ? options : optionsDefault
     ),

@@ -2,6 +2,7 @@ export interface Options {
   dimosio?: boolean;
   exoterikou?: boolean;
   topiki?: Topiki;
+  yliki?: string;
 }
 
 type Topiki =

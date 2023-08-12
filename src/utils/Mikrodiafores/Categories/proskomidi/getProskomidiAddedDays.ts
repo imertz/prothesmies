@@ -6,8 +6,11 @@ import { extraArgies } from '../../../ArgiesAndAnastoli/extraArgies';
 import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
+import { barbaraGetAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
 
 export const getProskomidiAddedDays = (start: string, options?: Options) => {
+  let topiki = options?.topiki ?? 'Αθηνών';
+
   let text: {
     nomothesia: string[];
     ypologismos: string[];
@@ -15,7 +18,9 @@ export const getProskomidiAddedDays = (start: string, options?: Options) => {
   } = { nomothesia: [], ypologismos: [], imeres: [] };
   let days = 20;
 
-  text.imeres.push(`${days} ημέρες από την κατάθεση της αγωγής.`);
+  text.imeres.push(
+    `${days} ημέρες από τη λήξη της προθεσμίας για την επίδοση της αγωγής.`
+  );
 
   let argiesDimosiou: string[] = [];
   if (options?.dimosio) {
@@ -26,7 +31,10 @@ export const getProskomidiAddedDays = (start: string, options?: Options) => {
 
   const argia = analyseArgies(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
-    anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
+    anastoli: addArgAndAnastDays(anastoliFunc(year), [
+      ...argiesDimosiou,
+      ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', 'Ειρ'),
+    ]),
   });
   let dayOfWeek = '';
   if (new Date(argia).getDay() === 0) {

@@ -5,8 +5,11 @@ import { anastoliFunc } from '../../../ArgiesAndAnastoli/AnastoliFunc';
 import { extraArgies } from '../../../ArgiesAndAnastoli/extraArgies';
 import { Options } from '../../Types/interfaces';
 import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
+import { barbaraGetAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
 
 export const getProskomidi = (start: string, options?: Options): string => {
+  let topiki = options?.topiki ?? 'Αθηνών';
+
   let argiesDimosiou: string[] = [];
   let days = 20;
 
@@ -16,7 +19,10 @@ export const getProskomidi = (start: string, options?: Options): string => {
   const year = parseInt(start.slice(0, 4));
   let proskomidi = getDate(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
-    anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
+    anastoli: addArgAndAnastDays(anastoliFunc(year), [
+      ...argiesDimosiou,
+      ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', 'Ειρ'),
+    ]),
   });
 
   return proskomidi.toISOString().split('T')[0];

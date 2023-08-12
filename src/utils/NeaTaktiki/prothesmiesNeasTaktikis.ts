@@ -25,6 +25,7 @@ interface ProthesmiesNeasTaktikis {
   dikasimos?: string;
   opsigeneis?: string;
   opsigeneisAntikrousi?: string;
+
   epidosiDetails?: {
     nomothesia: string[];
     ypologismos: string[];
@@ -71,10 +72,7 @@ export const prothesmiesNeasTaktikis = (
   let topiki = options?.topiki ?? 'Αθηνών';
   let dikasimos = options?.dikasimos ?? undefined;
   let yliki = options?.yliki ?? 'Μον';
-  let klisi = false;
-  if (options?.klisi !== undefined) {
-    klisi = options.klisi;
-  }
+  let klisi = options?.klisi ?? undefined;
 
   let optionsDefault: Options = {
     exoterikou,
