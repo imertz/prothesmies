@@ -21,7 +21,6 @@ export const getProtaseis = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
-    console.log(argiesDimosiou.filter(x => x.includes('2023')));
   }
   let topiki = options?.topiki ?? 'Αθηνών';
 
