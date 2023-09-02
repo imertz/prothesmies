@@ -81,7 +81,7 @@ export const prothesmiesMikrodiaforon = (
   let prosthiki = getProsthiki(proskomidi, options ? options : optionsDefault);
   let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);
   let proskomidiParemv = getProskomParemv(
-    paremvasi,
+    katathesi,
     options ? options : optionsDefault
   );
   let prosthikiParemv = getProsthParemv(
