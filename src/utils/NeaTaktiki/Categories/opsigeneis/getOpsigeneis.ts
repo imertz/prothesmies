@@ -7,6 +7,7 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -26,6 +27,7 @@ export const getOpsigeneis = (start: string, options: Options): string => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...getAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
       ...barbaraGetAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
+      ...danielGetAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

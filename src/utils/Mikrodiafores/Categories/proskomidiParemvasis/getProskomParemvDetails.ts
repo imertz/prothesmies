@@ -1,6 +1,9 @@
 import { Options } from '../../Types/interfaces';
 import { getProskomParemvAddedDays } from './getProskomParemvAddedDays';
-import { barbaraLegalAnalysis } from '../../../LegalAnalysis/legalAnalysis';
+import {
+  barbaraLegalAnalysis,
+  danielLegalAnalysis,
+} from '../../../LegalAnalysis/legalAnalysis';
 import {
   checkIfAnastoliDiakopon,
   earlierThan,
@@ -14,7 +17,7 @@ export const getProskomParemvDetails = (
   options?: Options
 ) => {
   let topiki = options?.topiki ?? 'Αθηνών';
-  const filtered = [...barbaraLegalAnalysis].filter(
+  const filtered = [...barbaraLegalAnalysis, ...danielLegalAnalysis].filter(
     r =>
       checkIfIncluded(topiki, r.periohes) &&
       (r.eidos.includes('epidosi') || r.eidos.includes('all'))

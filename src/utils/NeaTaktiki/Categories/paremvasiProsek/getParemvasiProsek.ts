@@ -8,6 +8,7 @@ import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -30,6 +31,11 @@ export const getParemvasiProsek = (start: string, options: Options): string => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek', options?.yliki),
       ...barbaraGetAnastolesAnaDikastirio(
+        topiki,
+        'paremvasi_prosek',
+        options?.yliki
+      ),
+      ...danielGetAnastolesAnaDikastirio(
         topiki,
         'paremvasi_prosek',
         options?.yliki

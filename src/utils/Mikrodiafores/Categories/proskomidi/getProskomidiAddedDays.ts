@@ -6,7 +6,10 @@ import { extraArgies } from '../../../ArgiesAndAnastoli/extraArgies';
 import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
-import { barbaraGetAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
+import {
+  barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
+} from '../../../Dikastiria/dikastiria';
 
 export const getProskomidiAddedDays = (start: string, options?: Options) => {
   let topiki = options?.topiki ?? 'Αθηνών';
@@ -34,6 +37,7 @@ export const getProskomidiAddedDays = (start: string, options?: Options) => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...argiesDimosiou,
       ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', 'Ειρ'),
+      ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', 'Ειρ'),
     ]),
   });
   let dayOfWeek = '';

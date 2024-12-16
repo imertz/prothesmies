@@ -11,6 +11,7 @@ import { reverseDate } from '../../../Various/reverseDate';
 import {
   barbaraGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
 export const getEpidosiAddedDays = (start: string, options: Options) => {
@@ -33,6 +34,8 @@ export const getEpidosiAddedDays = (start: string, options: Options) => {
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
         ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
         ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+
         ...argiesDimosiou,
       ]),
     });
@@ -51,6 +54,7 @@ export const getEpidosiAddedDays = (start: string, options: Options) => {
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
         ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
         ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });

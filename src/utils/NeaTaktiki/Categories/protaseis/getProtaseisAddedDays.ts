@@ -9,6 +9,7 @@ import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import { earlierThan } from '../../../Various/checkEarlierOrLaterDate';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   checkIfIncluded,
   getAnastolesAnaDikastirio,
   normalizePeriohesWithExceptions,
@@ -228,6 +229,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
             ...argiesDimosiou,
           ]),
         });
+
         let dayOfWeek = '';
         if (new Date(argia).getDay() === 0) {
           dayOfWeek = ' (Κυριακή)';
@@ -257,6 +259,11 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
               'epidosi',
               options?.yliki
             ),
+            ...danielGetAnastolesAnaDikastirio(
+              topiki,
+              'epidosi',
+              options?.yliki
+            ),
             ...argiesDimosiou,
           ]),
         });
@@ -267,6 +274,11 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
           anastoli: addArgAndAnastDays(anastoliFunc(year), [
             ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
             ...barbaraGetAnastolesAnaDikastirio(
+              topiki,
+              'protaseis',
+              options?.yliki
+            ),
+            ...danielGetAnastolesAnaDikastirio(
               topiki,
               'protaseis',
               options?.yliki
@@ -317,6 +329,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
             ...argiesDimosiou,
           ]),
         });
+
         let dayOfWeek = '';
         if (new Date(argia).getDay() === 0) {
           dayOfWeek = ' (Κυριακή)';
@@ -336,38 +349,6 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
             protaseis.toISOString().split('T')[0]
           )} δεν υπολογίζεται στις προθεσμίες των άρθρων 237 και 238 ΚΠολΔ. Παρατείνεται και λήγει την Δευτέρα 13 Φεβρουαρίου 2023.(ΦΕΚ 598/Β/07.02.2023)`
         );
-      }
-      if (
-        (protaseis.toISOString().split('T')[0] === '2023-02-08' ||
-          protaseis.toISOString().split('T')[0] === '2023-02-09') &&
-        barbaraCheckIfIncludedSingle(topiki)
-      ) {
-        const argia = analyseArgies(start, days, {
-          argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
-          anastoli: addArgAndAnastDays(anastoliFunc(year), [
-            ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
-            ...argiesDimosiou,
-          ]),
-        });
-        let dayOfWeek = '';
-        if (new Date(argia).getDay() === 0) {
-          dayOfWeek = ' (Κυριακή)';
-        }
-        if (new Date(argia).getDay() === 6) {
-          dayOfWeek = ' (Σάββατο)';
-        }
-        if (argia) {
-          text.ypologismos.push(
-            `Επειδή η ${reverseDate(
-              argia
-            )} είναι αργία${dayOfWeek}, η ημερομήνια μετατέθηκε στην επομένη εργάσιμη.`
-          );
-        }
-        text.ypologismos.push(
-          `H ${reverseDate(
-            protaseis.toISOString().split('T')[0]
-          )} δεν υπολογίζεται στις προθεσμίες των άρθρων 237 και 238 ΚΠολΔ. Παρατείνεται και λήγει την Τρίτη 14 Φεβρουαρίου 2023.(ΦΕΚ 598/Β/07.02.2023)`
-        );
       } else {
         let days = options?.exoterikou ? 120 : 90;
 
@@ -376,6 +357,11 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
           anastoli: addArgAndAnastDays(anastoliFunc(year), [
             ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
             ...barbaraGetAnastolesAnaDikastirio(
+              topiki,
+              'protaseis',
+              options?.yliki
+            ),
+            ...danielGetAnastolesAnaDikastirio(
               topiki,
               'protaseis',
               options?.yliki

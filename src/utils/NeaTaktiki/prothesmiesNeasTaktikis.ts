@@ -72,7 +72,7 @@ export const prothesmiesNeasTaktikis = (
   let topiki = options?.topiki ?? 'Αθηνών';
   let dikasimos = options?.dikasimos ?? undefined;
   let yliki = options?.yliki ?? 'Μον';
-  let klisi = options?.klisi ?? undefined;
+  let klisi = options?.klisi ?? false;
 
   let optionsDefault: Options = {
     exoterikou,
@@ -97,6 +97,7 @@ export const prothesmiesNeasTaktikis = (
     options ? options : optionsDefault
   );
   let protaseis = getProtaseis(katathesi, options ? options : optionsDefault);
+
   let prosthiki = getProsthiki(protaseis, options ? options : optionsDefault);
   let opsigeneis = undefined;
   let opsigeneisAntikrousi = undefined;

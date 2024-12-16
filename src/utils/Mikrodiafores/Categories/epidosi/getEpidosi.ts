@@ -5,7 +5,10 @@ import { anastoliFunc } from '../../../ArgiesAndAnastoli/AnastoliFunc';
 import { extraArgies } from '../../../ArgiesAndAnastoli/extraArgies';
 import { Options } from '../../Types/interfaces';
 import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
-import { barbaraGetAnastolesAnaDikastirio } from '../../../Dikastiria/dikastiria';
+import {
+  barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
+} from '../../../Dikastiria/dikastiria';
 
 // interface Options {
 //   dimosio?: boolean;
@@ -24,6 +27,7 @@ export const getEpidosi = (start: string, options?: Options): string => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...argiesDimosiou,
       ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', 'Ειρ'),
+      ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', 'Ειρ'),
     ]),
   });
 

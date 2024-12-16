@@ -8,6 +8,7 @@ import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -28,6 +29,7 @@ export const getEpidosi = (start: string, options: Options): string => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
       ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+      ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

@@ -1,6 +1,7 @@
 import { Options } from '../../Types/interfaces';
 import {
   barbaraLegalAnalysis,
+  danielLegalAnalysis,
   legalAnalysis,
 } from '../../../LegalAnalysis/legalAnalysis';
 import {
@@ -20,7 +21,11 @@ export const getOpsigeneisAntikrousiDetails = (
     return undefined;
   } else {
     let topiki = options?.topiki ?? 'Αθηνών';
-    const filtered = [...legalAnalysis, ...barbaraLegalAnalysis].filter(
+    const filtered = [
+      ...legalAnalysis,
+      ...barbaraLegalAnalysis,
+      ...danielLegalAnalysis,
+    ].filter(
       r =>
         checkIfIncluded(topiki, r.periohes) &&
         (r.eidos.includes('opsigeneis_antikrousi') || r.eidos.includes('all'))

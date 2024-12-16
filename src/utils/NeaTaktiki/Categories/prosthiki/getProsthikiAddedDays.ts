@@ -9,12 +9,17 @@ import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import { earlierThan } from '../../../Various/checkEarlierOrLaterDate';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   checkIfIncluded,
   getAnastolesAnaDikastirio,
   normalizePeriohesWithExceptions,
 } from '../../../Dikastiria/dikastiria';
 import { reverseDate } from '../../../Various/reverseDate';
 import { barbaraCheckIfIncludedSingle } from '../../Anastoles/prosthikiHmeronBarbara2023';
+import {
+  danielCheckIfIncludedSingle,
+  danielCheckIfIncludedSingle2,
+} from '../../Anastoles/prosthikiHmeronDaniel2023';
 
 export const getProsthikiAddedDays = (
   protaseisDate: string,
@@ -130,17 +135,27 @@ export const getProsthikiAddedDays = (
     }
     return text;
   } else {
-    let argia = analyseArgies(protaseisDate, 15, {
+    let prosthiki = getDate(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
         ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
+
     if (
-      (argia === '2023-02-06' || argia === '2023-02-07') &&
+      (prosthiki.toISOString().split('T')[0] === '2023-02-06' ||
+        prosthiki.toISOString().split('T')[0] === '2023-02-07') &&
       barbaraCheckIfIncludedSingle(topiki)
     ) {
+      let argia = analyseArgies(protaseisDate, 15, {
+        argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(year), [
+          ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
+          ...argiesDimosiou,
+        ]),
+      });
+
       let dayOfWeek = '';
       if (new Date(argia).getDay() === 0) {
         dayOfWeek = ' (Κυριακή)';
@@ -158,14 +173,23 @@ export const getProsthikiAddedDays = (
 
       text.ypologismos.push(
         `H ${reverseDate(
-          argia
+          prosthiki.toISOString().split('T')[0]
         )} δεν υπολογίζεται στις προθεσμίες των άρθρων 237 και 238 ΚΠολΔ. Παρατείνεται και λήγει την Δευτέρα 13 Φεβρουαρίου 2023.(ΦΕΚ 598/Β/07.02.2023)`
       );
     }
     if (
-      (argia === '2023-02-08' || argia === '2023-02-09') &&
+      (prosthiki.toISOString().split('T')[0] === '2023-02-08' ||
+        prosthiki.toISOString().split('T')[0] === '2023-02-09') &&
       barbaraCheckIfIncludedSingle(topiki)
     ) {
+      let argia = analyseArgies(protaseisDate, 15, {
+        argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(year), [
+          ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
+          ...argiesDimosiou,
+        ]),
+      });
+
       let dayOfWeek = '';
       if (new Date(argia).getDay() === 0) {
         dayOfWeek = ' (Κυριακή)';
@@ -183,15 +207,95 @@ export const getProsthikiAddedDays = (
 
       text.ypologismos.push(
         `H ${reverseDate(
-          argia
+          prosthiki.toISOString().split('T')[0]
         )} δεν υπολογίζεται στις προθεσμίες των άρθρων 237 και 238 ΚΠολΔ. Παρατείνεται και λήγει την Τρίτη 14 Φεβρουαρίου 2023.(ΦΕΚ 598/Β/07.02.2023)`
       );
+    }
+    if (
+      (prosthiki.toISOString().split('T')[0] === '2023-09-08' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-09' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-10' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-11' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-12' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-13') &&
+      danielCheckIfIncludedSingle(topiki)
+    ) {
+      let argia = analyseArgies(protaseisDate, 15, {
+        argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(year), [
+          ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
+          ...argiesDimosiou,
+        ]),
+      });
+
+      let dayOfWeek = '';
+      if (new Date(argia).getDay() === 0) {
+        dayOfWeek = ' (Κυριακή)';
+      }
+      if (new Date(argia).getDay() === 6) {
+        dayOfWeek = ' (Σάββατο)';
+      }
+      if (argia) {
+        text.ypologismos.push(
+          `Επειδή η ${reverseDate(
+            argia
+          )} είναι αργία${dayOfWeek}, η ημερομήνια μετατέθηκε στην επομένη εργάσιμη.`
+        );
+      }
+
+      text.ypologismos.push(
+        `H ${reverseDate(
+          prosthiki.toISOString().split('T')[0]
+        )} δεν υπολογίζεται στις προθεσμίες των άρθρων 237 και 238 ΚΠολΔ. Παρατείνεται και λήγει την Τρίτη 19 Σεπτεμβρίου 2023.(ΦΕΚ  B’ 5384/09.09.2023)`
+      );
+    }
+    if (
+      (prosthiki.toISOString().split('T')[0] === '2023-09-09' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-10' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-11' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-12' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-13') &&
+      danielCheckIfIncludedSingle2(topiki)
+    ) {
+      let argia = analyseArgies(protaseisDate, 15, {
+        argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(year), [
+          ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
+          ...argiesDimosiou,
+        ]),
+      });
+
+      let dayOfWeek = '';
+      if (new Date(argia).getDay() === 0) {
+        dayOfWeek = ' (Κυριακή)';
+      }
+      if (new Date(argia).getDay() === 6) {
+        dayOfWeek = ' (Σάββατο)';
+      }
+      if (argia) {
+        text.ypologismos.push(
+          `Επειδή η ${reverseDate(
+            argia
+          )} είναι αργία${dayOfWeek}, η ημερομήνια μετατέθηκε στην επομένη εργάσιμη.`
+        );
+      }
+
+      text.ypologismos.push(
+        `H ${reverseDate(
+          prosthiki.toISOString().split('T')[0]
+        )} δεν υπολογίζεται στις προθεσμίες των άρθρων 237 και 238 ΚΠολΔ. Παρατείνεται και λήγει την Τρίτη 19 Σεπτεμβρίου 2023.(ΦΕΚ  B’ 5385/09.09.2023)`
+      );
     } else {
-      argia = analyseArgies(protaseisDate, 15, {
+      let argia = analyseArgies(protaseisDate, 15, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
           ...getAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
           ...barbaraGetAnastolesAnaDikastirio(
+            topiki,
+            'prosthiki',
+            options?.yliki
+          ),
+          ...danielGetAnastolesAnaDikastirio(
             topiki,
             'prosthiki',
             options?.yliki

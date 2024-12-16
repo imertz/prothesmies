@@ -8,6 +8,7 @@ import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -37,6 +38,7 @@ export const getOpsigeneisAddedDays = (start: string, options: Options) => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...getAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
       ...barbaraGetAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
+      ...danielGetAnastolesAnaDikastirio(topiki, 'opsigeneis', options?.yliki),
       ...argiesDimosiou,
     ]),
   });

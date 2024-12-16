@@ -8,6 +8,7 @@ import { Options } from '../../Types/interfaces';
 import { reverseDate } from '../../../Various/reverseDate';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -46,6 +47,11 @@ export const getOpsigeneiAntikrousisAddedDays = (
       ...argiesDimosiou,
     ]),
     ...barbaraGetAnastolesAnaDikastirio(
+      topiki,
+      'opsigeneis_antikrousi',
+      options?.yliki
+    ),
+    ...danielGetAnastolesAnaDikastirio(
       topiki,
       'opsigeneis_antikrousi',
       options?.yliki

@@ -7,7 +7,9 @@ import { prothesmiesNeasTaktikis } from '../src/utils/NeaTaktiki/prothesmiesNeas
 // console.log(prothesmiesNeasTaktikis('2022-10-08', { topiki: 'Αθηνών' }));
 // console.log(prothesmiesNeasTaktikis('2022-10-09', { topiki: 'Αθηνών' }));
 // console.log(prothesmiesNeasTaktikis('2022-10-10', { topiki: 'Αθηνών' }));
-// console.log(prothesmiesNeasTaktikis('2022-10-11', { topiki: 'Αθηνών' }));
+console.log(
+  prothesmiesNeasTaktikis('2023-04-11', { topiki: 'Φαρσάλων', yliki: 'Ειρ' })
+);
 // console.log(
 
 describe('Υπολογισμός Προθεσμιών Νέας Τακτικής', () => {

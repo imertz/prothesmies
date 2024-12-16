@@ -8,11 +8,16 @@ import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   checkIfIncluded,
   getAnastolesAnaDikastirio,
   normalizePeriohesWithExceptions,
 } from '../../../Dikastiria/dikastiria';
 import { barbaraCheckIfIncludedSingle } from '../../Anastoles/prosthikiHmeronBarbara2023';
+import {
+  danielCheckIfIncludedSingle,
+  danielCheckIfIncludedSingle2,
+} from '../../Anastoles/prosthikiHmeronDaniel2023';
 
 // interface Options {
 //   dimosio?: boolean;
@@ -112,6 +117,28 @@ export const getProsthiki = (
     ) {
       return '2023-02-14';
     }
+
+    if (
+      (prosthiki.toISOString().split('T')[0] === '2023-09-08' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-09' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-10' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-11' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-12' ||
+        prosthiki.toISOString().split('T')[0] === '2023-09-13') &&
+      danielCheckIfIncludedSingle(topiki)
+    ) {
+      return '2023-09-19';
+    }
+    if (
+      prosthiki.toISOString().split('T')[0] === '2023-09-09' ||
+      prosthiki.toISOString().split('T')[0] === '2023-09-10' ||
+      prosthiki.toISOString().split('T')[0] === '2023-09-11' ||
+      prosthiki.toISOString().split('T')[0] === '2023-09-12' ||
+      (prosthiki.toISOString().split('T')[0] === '2023-09-13' &&
+        danielCheckIfIncludedSingle2(topiki))
+    ) {
+      return '2023-09-19';
+    }
     prosthiki = getDate(protaseisDate, 15, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
@@ -121,6 +148,7 @@ export const getProsthiki = (
           'prosthiki',
           options?.yliki
         ),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'prosthiki', options?.yliki),
         ...argiesDimosiou,
       ]),
     });

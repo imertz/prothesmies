@@ -8,6 +8,7 @@ import { Options } from '../../Types/interfaces';
 import { checkIfIncludedSingle } from '../../Anastoles/prosthikiHmeron2021';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   checkIfIncluded,
   getAnastolesAnaDikastirio,
   normalizePeriohesWithExceptions,
@@ -38,6 +39,7 @@ export const getProtaseis = (start: string, options: Options): string => {
             'epidosi',
             options?.yliki
           ),
+          ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
           ...argiesDimosiou,
         ]),
       });
@@ -65,11 +67,17 @@ export const getProtaseis = (start: string, options: Options): string => {
       ) {
         return '2023-02-14';
       }
+
       protaseis = getDate(epidosi.toISOString().split('T')[0], days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
           ...getAnastolesAnaDikastirio(topiki, 'protaseis', options?.yliki),
           ...barbaraGetAnastolesAnaDikastirio(
+            topiki,
+            'protaseis',
+            options?.yliki
+          ),
+          ...danielGetAnastolesAnaDikastirio(
             topiki,
             'protaseis',
             options?.yliki
@@ -103,6 +111,7 @@ export const getProtaseis = (start: string, options: Options): string => {
       ) {
         return '2023-02-14';
       }
+
       protaseis = getDate(start, days, {
         argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(year), [
@@ -143,8 +152,6 @@ export const getProtaseis = (start: string, options: Options): string => {
       anastoli: [],
     });
 
-    // console.log(new_protaseis);
-    // console.log(start);
     if (
       new Date('2022-01-24') <= new Date(new_protaseis) &&
       new Date('2022-01-29') >= new Date(new_protaseis) &&

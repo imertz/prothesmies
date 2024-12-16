@@ -10,6 +10,7 @@ import { earlierThan } from '../../../Various/checkEarlierOrLaterDate';
 import { reverseDate } from '../../../Various/reverseDate';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -39,6 +40,7 @@ export const getParemvasiAddedDays = (start: string, options: Options) => {
           'paremvasi',
           options?.yliki
         ),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -61,6 +63,7 @@ export const getParemvasiAddedDays = (start: string, options: Options) => {
           'paremvasi',
           options?.yliki
         ),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });
@@ -104,6 +107,7 @@ export const getParemvasiAddedDays = (start: string, options: Options) => {
           'paremvasi',
           options?.yliki
         ),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
         ...argiesDimosiou,
       ]),
     });

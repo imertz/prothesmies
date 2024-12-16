@@ -7,6 +7,7 @@ import { anastoliDimosiouFunc } from '../../Anastoles/anastoliDimosiou';
 import { Options } from '../../Types/interfaces';
 import {
   barbaraGetAnastolesAnaDikastirio,
+  danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
 
@@ -26,6 +27,7 @@ export const getAntikrousiOpsig = (start: string, options: Options): string => {
     anastoli: addArgAndAnastDays(anastoliFunc(year), [
       ...getAnastolesAnaDikastirio(topiki, 'antikrousi', options?.yliki),
       ...barbaraGetAnastolesAnaDikastirio(topiki, 'antikrousi', options?.yliki),
+      ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
       ...argiesDimosiou,
     ]),
   });
