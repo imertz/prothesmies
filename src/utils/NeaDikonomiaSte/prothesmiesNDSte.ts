@@ -18,7 +18,7 @@ interface ProthesmiesMikrodiaforon {
     ypologismos: string[];
     imeres: string[];
   };
-  lixiDetails?: {
+  prothesmiaEpidosisDetails?: {
     nomothesia: string[];
     ypologismos: string[];
     imeres: string[];
@@ -51,7 +51,7 @@ export const prothesmiesNDSte = (
     prothesmiaEpidosis,
     epidosi: epidosi || undefined,
     apopseis: epidosi ? getApopseisDioikisis(epidosi) : undefined,
-    lixiDetails: getLixiDetails(katathesi),
+    prothesmiaEpidosisDetails: getLixiDetails(katathesi),
     apopseisDetails: epidosi ? getApopseisDioikisisDetails(epidosi) : undefined,
     prosthetoiLogoi: epidosi ? getProsthetoiLogoi(epidosi) : undefined,
     prosthetoiLogoiDetails: epidosi
