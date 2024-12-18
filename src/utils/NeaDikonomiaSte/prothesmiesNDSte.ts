@@ -62,4 +62,4 @@ export const prothesmiesNDSte = (
   return prothesmies;
 };
 
-console.log(prothesmiesNDSte('2024-10-02', '2024-10-28'));
+console.log(prothesmiesNDSte('2025-05-02', '2025-07-28'));

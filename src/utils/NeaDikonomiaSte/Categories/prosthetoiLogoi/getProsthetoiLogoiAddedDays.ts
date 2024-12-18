@@ -35,7 +35,7 @@ export const getProsthetoiLogoiAddedDays = (start: string) => {
     days,
     {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
-      anastoli: [...argiesDimosiou],
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [...argiesDimosiou]),
     }
   );
   let dayOfWeek = '';
