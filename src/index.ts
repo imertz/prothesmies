@@ -3,6 +3,7 @@ import { prothesmiesMikrodiaforon } from './utils/Mikrodiafores/prothesmiesMikro
 import { prothesmiesDiatPliromis } from './utils/DiatagesPliromis/prothesmiesDiatPliromis';
 import { prothesmiesApopoiisis } from './utils/Apodochi/prothesmiesApopoiisis';
 import { prothesmiesNDSte } from './utils/NeaDikonomiaSte/prothesmiesNDSte';
+import { prothesmiesYas } from './utils/Yas/prothesmiesYas';
 
 export {
   prothesmiesNeasTaktikis,
@@ -10,4 +11,5 @@ export {
   prothesmiesDiatPliromis,
   prothesmiesApopoiisis,
   prothesmiesNDSte,
+  prothesmiesYas,
 };
