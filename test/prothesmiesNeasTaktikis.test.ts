@@ -3,13 +3,13 @@ import { prothesmiesNeasTaktikis } from '../src/utils/NeaTaktiki/prothesmiesNeas
 // import { getProsthiki } from '../src/utils/NeaTaktiki/Categories/getProsthiki';
 // import { getParemvasiProsek } from '../src/utils/NeaTaktiki/Categories/getParemvasiProsek';
 
-// console.log(prothesmiesNeasTaktikis('2022-10-07', { topiki: 'Αθηνών' }));
+console.log(prothesmiesNeasTaktikis('2026-01-08', { topiki: 'Αθηνών' }));
 // console.log(prothesmiesNeasTaktikis('2022-10-08', { topiki: 'Αθηνών' }));
 // console.log(prothesmiesNeasTaktikis('2022-10-09', { topiki: 'Αθηνών' }));
 // console.log(prothesmiesNeasTaktikis('2022-10-10', { topiki: 'Αθηνών' }));
-console.log(
-  prothesmiesNeasTaktikis('2023-04-11', { topiki: 'Φαρσάλων', yliki: 'Ειρ' })
-);
+// console.log(
+//   prothesmiesNeasTaktikis('2023-04-11', { topiki: 'Φαρσάλων', yliki: 'Ειρ' })
+// );
 // console.log(
 
 describe('Υπολογισμός Προθεσμιών Νέας Τακτικής', () => {
