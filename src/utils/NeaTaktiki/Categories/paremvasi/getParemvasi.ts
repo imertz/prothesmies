@@ -17,7 +17,6 @@ import {
 // }
 export const getParemvasi = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
-  let days = options?.exoterikou ? 90 : 60;
 
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
@@ -25,6 +24,38 @@ export const getParemvasi = (start: string, options: Options): string => {
   let topiki = options?.topiki ?? 'Αθηνών';
 
   const year = parseInt(start.slice(0, 4));
+
+  // Ν. 5221/2025 (Αρθ. 238 νέο): Για αγωγές από 1/1/2026, η παρέμβαση υπολογίζεται
+  // από το πέρας της προθεσμίας επίδοσης (όχι από κατάθεση) με 40/70 ημέρες
+  if (new Date(start).getTime() >= new Date('2026-01-01').getTime()) {
+    let epidosiDays = options?.exoterikou ? 60 : 30;
+    let epidosi = getDate(start, epidosiDays, {
+      argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [
+        ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...argiesDimosiou,
+      ]),
+    });
+    let epidosiDate = epidosi.toISOString().split('T')[0];
+    let days = options?.exoterikou ? 70 : 40;
+
+    let paremvasi = getDate(epidosiDate, days, {
+      argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [
+        ...getAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
+        ...barbaraGetAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'paremvasi', options?.yliki),
+        ...argiesDimosiou,
+      ]),
+    });
+
+    return paremvasi.toISOString().split('T')[0];
+  }
+
+  // Προϊσχύον δίκαιο: 60/90 ημέρες από κατάθεση
+  let days = options?.exoterikou ? 90 : 60;
 
   let paremvasi = getDate(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),

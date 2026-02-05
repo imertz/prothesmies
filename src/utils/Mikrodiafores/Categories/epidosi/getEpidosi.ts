@@ -16,7 +16,10 @@ import {
 export const getEpidosi = (start: string, options?: Options): string => {
   let argiesDimosiou: string[] = [];
   let topiki = options?.topiki ?? 'Αθηνών';
-  let days = options?.exoterikou ? 30 : 10;
+  // Ν. 5221/2025 (Αρθ. 468): Από 1/1/2026 πάντα 10 ημέρες (αφαιρέθηκε η παράταση εξωτερικού)
+  let days = (new Date(start).getTime() >= new Date('2026-01-01').getTime())
+    ? 10
+    : (options?.exoterikou ? 30 : 10);
 
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();

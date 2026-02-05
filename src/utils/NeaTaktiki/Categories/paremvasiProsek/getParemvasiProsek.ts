@@ -20,11 +20,50 @@ export const getParemvasiProsek = (start: string, options: Options): string => {
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();
   }
-  let days = options?.exoterikou ? 120 : 90;
 
   let topiki = options?.topiki ?? 'Αθηνών';
 
   const year = parseInt(start.slice(0, 4));
+
+  // Ν. 5221/2025 (Αρθ. 238 νέο): Για αγωγές από 1/1/2026, η παρέμβαση μετά
+  // προσεπίκληση υπολογίζεται από το πέρας επίδοσης με 70/100 ημέρες
+  if (new Date(start).getTime() >= new Date('2026-01-01').getTime()) {
+    let epidosiDays = options?.exoterikou ? 60 : 30;
+    let epidosi = getDate(start, epidosiDays, {
+      argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [
+        ...getAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...barbaraGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...danielGetAnastolesAnaDikastirio(topiki, 'epidosi', options?.yliki),
+        ...argiesDimosiou,
+      ]),
+    });
+    let epidosiDate = epidosi.toISOString().split('T')[0];
+    let days = options?.exoterikou ? 100 : 70;
+
+    let paremvasi_prosek = getDate(epidosiDate, days, {
+      argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
+      anastoli: addArgAndAnastDays(anastoliFunc(year), [
+        ...getAnastolesAnaDikastirio(topiki, 'paremvasi_prosek', options?.yliki),
+        ...barbaraGetAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
+        ...danielGetAnastolesAnaDikastirio(
+          topiki,
+          'paremvasi_prosek',
+          options?.yliki
+        ),
+        ...argiesDimosiou,
+      ]),
+    });
+
+    return paremvasi_prosek.toISOString().split('T')[0];
+  }
+
+  // Προϊσχύον δίκαιο: 90/120 ημέρες από κατάθεση
+  let days = options?.exoterikou ? 120 : 90;
 
   let paremvasi_prosek = getDate(start, days, {
     argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
