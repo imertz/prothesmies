@@ -11,13 +11,14 @@ import {
   danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
+import { getEpidosiDays } from './getEpidosiDays';
 
 // interface Options {
 //   dimosio?: boolean;
 // }
 export const getEpidosi = (start: string, options: Options): string => {
   let argiesDimosiou: string[] = [];
-  let days = options?.exoterikou ? 60 : 30;
+  let days = getEpidosiDays(start, options?.exoterikou);
 
   if (options?.dimosio) {
     argiesDimosiou = anastoliDimosiouFunc();

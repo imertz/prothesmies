@@ -11,6 +11,7 @@ import {
   danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
+import { getEpidosiDays } from '../epidosi/getEpidosiDays';
 
 // interface Options {
 //   dimosio?: boolean;
@@ -28,7 +29,7 @@ export const getParemvasi = (start: string, options: Options): string => {
   // Ν. 5221/2025 (Αρθ. 238 νέο): Για αγωγές από 1/1/2026, η παρέμβαση υπολογίζεται
   // από το πέρας της προθεσμίας επίδοσης (όχι από κατάθεση) με 40/70 ημέρες
   if (new Date(start).getTime() >= new Date('2026-01-01').getTime()) {
-    let epidosiDays = options?.exoterikou ? 60 : 30;
+    let epidosiDays = getEpidosiDays(start, options?.exoterikou);
     let epidosi = getDate(start, epidosiDays, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [

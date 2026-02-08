@@ -13,6 +13,7 @@ import {
   danielGetAnastolesAnaDikastirio,
   getAnastolesAnaDikastirio,
 } from '../../../Dikastiria/dikastiria';
+import { getEpidosiDays } from '../epidosi/getEpidosiDays';
 
 export const getParemvasiProsekAddedDays = (
   start: string,
@@ -34,7 +35,7 @@ export const getParemvasiProsekAddedDays = (
     const year = parseInt(start.slice(0, 4));
 
     // Υπολογισμός βάσης: πέρας επίδοσης
-    let epidosiDays = options?.exoterikou ? 60 : 30;
+    let epidosiDays = getEpidosiDays(start, options?.exoterikou);
     let epidosi = getDate(start, epidosiDays, {
       argies: addArgAndAnastDays(argiesFunc(year), [...extraArgies]),
       anastoli: addArgAndAnastDays(anastoliFunc(year), [
