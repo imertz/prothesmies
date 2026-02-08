@@ -69,4 +69,40 @@ describe('Υπολογισμός Προθεσμιών Νέας Τακτικής'
       'Eντός 120 ημερών από το τέλος της προθεσμίας για επίδοση της αγωγής.',
     ]);
   });
+
+  it('uses klisi filing date as anchor for protaseis after 2026', () => {
+    const agogiFlow = prothesmiesNeasTaktikis('2026-01-08', {
+      topiki: 'Αθηνών',
+      klisi: false,
+      exoterikou: false,
+    });
+    const klisiFlow = prothesmiesNeasTaktikis('2026-01-08', {
+      topiki: 'Αθηνών',
+      klisi: true,
+      exoterikou: false,
+    });
+
+    expect(new Date(klisiFlow.protaseis).getTime()).toBeLessThan(
+      new Date(agogiFlow.protaseis).getTime()
+    );
+    expect(klisiFlow.protaseisDetails?.imeres).toEqual([
+      'Eντός 90 ημερών από την κατάθεση της κλήσης.',
+    ]);
+    expect(klisiFlow.protaseisDetails?.nomothesia[0]).toContain('Αρθ. 237 § 3');
+    expect(klisiFlow.protaseisDetails?.nomothesia[0]).toContain(
+      'κατάθεση της κλήσης για τον προσδιορισμό δικασίμου'
+    );
+  });
+
+  it('uses 120 days for protaseis on klisi with foreign residence after 2026', () => {
+    const klisiFlowForeign = prothesmiesNeasTaktikis('2026-01-08', {
+      topiki: 'Αθηνών',
+      klisi: true,
+      exoterikou: true,
+    });
+
+    expect(klisiFlowForeign.protaseisDetails?.imeres).toEqual([
+      'Eντός 120 ημερών από την κατάθεση της κλήσης.',
+    ]);
+  });
 });
