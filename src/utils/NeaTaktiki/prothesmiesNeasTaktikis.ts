@@ -21,6 +21,15 @@ import { getProsthikiDetails } from './Categories/prosthiki/getProsthikiDetails'
 import { getOpsigeneisDetails } from './Categories/opsigeneis/getOpsigeneisDetails';
 import { getOpsigeneisAntikrousiDetails } from './Categories/opsigeneisAntikrousi/getOpsigeneisAntikrousiDetails';
 
+const N5221_EFFECTIVE_DATE = '2026-01-01';
+
+type Mode = 'neataktiki' | 'eidikes';
+type DeadlineDetails = {
+  nomothesia: string[];
+  ypologismos: string[];
+  imeres: string[];
+};
+
 interface ProthesmiesNeasTaktikis {
   katathesi: string;
   epidosi: string;
@@ -28,52 +37,24 @@ interface ProthesmiesNeasTaktikis {
   paremvasiProsek: string;
   protaseis: string;
   prosthiki: string;
+  mode?: Mode;
   dikasimos?: string;
   opsigeneis?: string;
   opsigeneisAntikrousi?: string;
   antikrousiArt269?: string;
 
-  epidosiDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  paremvasiDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  paremvasiProsekDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  protaseisDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  prosthikiDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  opsigeneisDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  opsigeneisAntikrousiDetails?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
-  antikrousiArt269Details?: {
-    nomothesia: string[];
-    ypologismos: string[];
-    imeres: string[];
-  };
+  epidosiDetails?: DeadlineDetails;
+  paremvasiDetails?: DeadlineDetails;
+  paremvasiProsekDetails?: DeadlineDetails;
+  protaseisDetails?: DeadlineDetails;
+  prosthikiDetails?: DeadlineDetails;
+  opsigeneisDetails?: DeadlineDetails;
+  opsigeneisAntikrousiDetails?: DeadlineDetails;
+  antikrousiArt269Details?: DeadlineDetails;
 }
+
+const isPostN5221 = (date: string): boolean =>
+  new Date(date).getTime() >= new Date(N5221_EFFECTIVE_DATE).getTime();
 
 export const prothesmiesNeasTaktikis = (
   katathesi: string,
@@ -85,6 +66,7 @@ export const prothesmiesNeasTaktikis = (
   let dikasimos = options?.dikasimos ?? undefined;
   let yliki = options?.yliki ?? 'Μον';
   let klisi = options?.klisi ?? false;
+  let mode = options?.mode ?? 'neataktiki';
 
   let optionsDefault: Options = {
     exoterikou,
@@ -93,6 +75,7 @@ export const prothesmiesNeasTaktikis = (
     yliki,
     dikasimos,
     klisi,
+    mode,
   };
 
   if (options !== undefined) {
@@ -101,106 +84,161 @@ export const prothesmiesNeasTaktikis = (
   if (options && options?.klisi === undefined) {
     options.klisi = klisi;
   }
+  if (options && options?.mode === undefined) {
+    options.mode = mode;
+  }
 
-  let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
-  let paremvasi = getParemvasi(katathesi, options ? options : optionsDefault);
-  let paremvasiProsek = getParemvasiProsek(
-    katathesi,
-    options ? options : optionsDefault
-  );
-  let protaseis = getProtaseis(katathesi, options ? options : optionsDefault);
+  const activeOptions = options ? options : optionsDefault;
 
-  let prosthiki = getProsthiki(protaseis, options ? options : optionsDefault);
+  if (mode === 'eidikes') {
+    if (!isPostN5221(katathesi)) {
+      throw new Error(
+        `Το mode "eidikes" υποστηρίζεται μόνο για αγωγές που κατατίθενται από ${N5221_EFFECTIVE_DATE}.`
+      );
+    }
+
+    const epidosi = getEpidosi(katathesi, activeOptions);
+    const epidosiBaseDetails = getEpidosiDetails(katathesi, epidosi, activeOptions);
+    let protaseis = '';
+    let prosthiki = '';
+    let protaseisDetails: DeadlineDetails = {
+      nomothesia: [
+        `Ειδικές διαδικασίες (Ν. 5221/2025, ισχύς από 1/1/2026): η κατάθεση προτάσεων παραμένει συνδεδεμένη με τη συζήτηση.`,
+      ],
+      ypologismos: [],
+      imeres: ['Κατά τη συζήτηση (δικάσιμο).'],
+    };
+    let prosthikiDetails: DeadlineDetails = {
+      nomothesia: [
+        `Ειδικές διαδικασίες (Ν. 5221/2025, ισχύς από 1/1/2026): προβλέπεται προσθήκη-αντίκρουση εντός πέντε (5) εργασίμων ημερών μετά τη συζήτηση.`,
+      ],
+      ypologismos: [],
+      imeres: ['5 εργάσιμες ημέρες μετά τη συζήτηση (δικάσιμο).'],
+    };
+
+    if (activeOptions.dikasimos !== undefined) {
+      let argiesDimosiou: string[] = [];
+      if (activeOptions.dimosio) {
+        argiesDimosiou = anastoliDimosiouFunc();
+      }
+
+      const yearDikasimos = parseInt(activeOptions.dikasimos.slice(0, 4));
+      const prosthikiDate = getDateErgasimesOnly(activeOptions.dikasimos, 5, {
+        argies: addArgAndAnastDays(argiesFunc(yearDikasimos), [...extraArgies]),
+        anastoli: addArgAndAnastDays(anastoliFunc(yearDikasimos), [
+          ...argiesDimosiou,
+        ]),
+      });
+
+      protaseis = activeOptions.dikasimos;
+      prosthiki = prosthikiDate.toISOString().split('T')[0];
+    } else {
+      protaseisDetails.ypologismos.push(
+        'Δεν υπολογίστηκε συγκεκριμένη ημερομηνία προτάσεων γιατί δεν δόθηκε δικάσιμος.'
+      );
+      prosthikiDetails.ypologismos.push(
+        'Δεν υπολογίστηκε προσθήκη-αντίκρουση γιατί απαιτείται ημερομηνία δικασίμου.'
+      );
+    }
+
+    return {
+      katathesi,
+      mode,
+      epidosi,
+      paremvasi: '',
+      paremvasiProsek: '',
+      protaseis,
+      prosthiki,
+      dikasimos: activeOptions.dikasimos,
+      epidosiDetails: {
+        nomothesia: [
+          `Αρθ. 215 § 2 ΚΠολΔ (Ν. 5221/2025). Για αγωγές που κατατίθενται από 1/1/2026, η αγωγή επιδίδεται εντός τριάντα (30) ημερών από την κατάθεση. Η προθεσμία είναι ενιαία και για διαδίκους εξωτερικού/αγνώστου διαμονής, με επίδοση και στον εισαγγελέα εντός της ίδιας προθεσμίας. Αν παρέλθει άπρακτη, η αγωγή θεωρείται ως μη ασκηθείσα.`,
+        ],
+        ypologismos: epidosiBaseDetails.ypologismos,
+        imeres: epidosiBaseDetails.imeres,
+      },
+      protaseisDetails,
+      prosthikiDetails,
+    };
+  }
+
+  let epidosi = getEpidosi(katathesi, activeOptions);
+  let paremvasi = getParemvasi(katathesi, activeOptions);
+  let paremvasiProsek = getParemvasiProsek(katathesi, activeOptions);
+  let protaseis = getProtaseis(katathesi, activeOptions);
+
+  let prosthiki = getProsthiki(protaseis, activeOptions);
   let opsigeneis: string | undefined = undefined;
   let opsigeneisAntikrousi: string | undefined = undefined;
   let antikrousiArt269: string | undefined = undefined;
 
-  if (options?.dikasimos !== undefined) {
-    if (
-      new Date(katathesi).getTime() >= new Date('2026-01-01').getTime()
-    ) {
+  if (activeOptions.dikasimos !== undefined) {
+    if (isPostN5221(katathesi)) {
       // Ν. 5221/2025 (Αρθ. 269 § 3): Αντίκρουση 5 εργάσιμες ημέρες ΜΕΤΑ τη συζήτηση
       // Οψιγενείς ισχυρισμοί: ΚΑΤΑΡΓΗΘΗΚΑΝ
       let argiesDimosiou: string[] = [];
-      if (options?.dimosio) {
+      if (activeOptions.dimosio) {
         argiesDimosiou = anastoliDimosiouFunc();
       }
-      const yearDikasimos = parseInt(options.dikasimos.slice(0, 4));
-      let antikrousiDate = getDateErgasimesOnly(options.dikasimos, 5, {
+      const yearDikasimos = parseInt(activeOptions.dikasimos.slice(0, 4));
+      let antikrousiDate = getDateErgasimesOnly(activeOptions.dikasimos, 5, {
         argies: addArgAndAnastDays(argiesFunc(yearDikasimos), [...extraArgies]),
         anastoli: addArgAndAnastDays(anastoliFunc(yearDikasimos), [
           ...argiesDimosiou,
         ]),
       });
       antikrousiArt269 = antikrousiDate.toISOString().split('T')[0];
-    } else if (
-      new Date(katathesi).getTime() >= new Date('2022-01-01').getTime()
-    ) {
+    } else if (new Date(katathesi).getTime() >= new Date('2022-01-01').getTime()) {
       // Προϊσχύον δίκαιο (Ν. 4842/2021): Οψιγενείς 20 ημέρες ΠΡΙΝ,
       // Αντίκρουση 10 ημέρες ΠΡΙΝ τον δικάσιμο
-      opsigeneis = getOpsigeneis(
-        options.dikasimos,
-        options ? options : optionsDefault
-      );
+      opsigeneis = getOpsigeneis(activeOptions.dikasimos, activeOptions);
       opsigeneisAntikrousi = getAntikrousiOpsig(
-        options.dikasimos,
-        options ? options : optionsDefault
+        activeOptions.dikasimos,
+        activeOptions
       );
     }
   }
 
   const prothesmies: ProthesmiesNeasTaktikis = {
     katathesi,
+    mode,
     epidosi,
     paremvasi,
     paremvasiProsek,
     protaseis,
     prosthiki,
-    dikasimos: options?.dikasimos,
+    dikasimos: activeOptions.dikasimos,
     opsigeneis,
     opsigeneisAntikrousi,
     antikrousiArt269,
-    epidosiDetails: getEpidosiDetails(
-      katathesi,
-      epidosi,
-      options ? options : optionsDefault
-    ),
-    paremvasiDetails: getParemvasiDetails(
-      katathesi,
-      paremvasi,
-      options ? options : optionsDefault
-    ),
+    epidosiDetails: getEpidosiDetails(katathesi, epidosi, activeOptions),
+    paremvasiDetails: getParemvasiDetails(katathesi, paremvasi, activeOptions),
     paremvasiProsekDetails: getParemvasiProsekDetails(
       katathesi,
       paremvasiProsek,
-      options ? options : optionsDefault
+      activeOptions
     ),
-    protaseisDetails: getProtaseisDetails(
-      katathesi,
-      protaseis,
-      options ? options : optionsDefault
-    ),
-    prosthikiDetails: getProsthikiDetails(
-      protaseis,
-      prosthiki,
-      options ? options : optionsDefault
-    ),
+    protaseisDetails: getProtaseisDetails(katathesi, protaseis, activeOptions),
+    prosthikiDetails: getProsthikiDetails(protaseis, prosthiki, activeOptions),
   };
-  if (opsigeneis !== undefined && options?.dikasimos !== undefined) {
+  if (opsigeneis !== undefined && activeOptions.dikasimos !== undefined) {
     prothesmies.opsigeneisDetails = getOpsigeneisDetails(
-      options.dikasimos,
+      activeOptions.dikasimos,
       opsigeneis,
-      options ? options : optionsDefault
+      activeOptions
     );
   }
-  if (opsigeneisAntikrousi !== undefined && options?.dikasimos !== undefined) {
+  if (
+    opsigeneisAntikrousi !== undefined &&
+    activeOptions.dikasimos !== undefined
+  ) {
     prothesmies.opsigeneisAntikrousiDetails = getOpsigeneisAntikrousiDetails(
-      options.dikasimos,
+      activeOptions.dikasimos,
       opsigeneisAntikrousi,
-      options ? options : optionsDefault
+      activeOptions
     );
   }
-  if (antikrousiArt269 !== undefined && options?.dikasimos !== undefined) {
+  if (antikrousiArt269 !== undefined && activeOptions.dikasimos !== undefined) {
     prothesmies.antikrousiArt269Details = {
       nomothesia: [
         `Αρθ. 269 § 3 ΚΠολΔ (Ν. 5221/2025). Μετά τη συζήτηση, οι διάδικοι δικαιούνται, μέσα σε πέντε (5) εργάσιμες ημέρες, να καταθέσουν σημείωμα για την αντίκρουση ισχυρισμών που προβλήθηκαν κατά τη συζήτηση. Βλ. Αρθ. 269 § 3 ΚΠολΔ, όπως αντικαταστάθηκε με το Ν. 5221/2025 (Α' 133/28-7-2025). Ισχύει για αγωγές και κλήσεις που κατατίθενται από 1/1/2026.`,

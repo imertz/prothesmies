@@ -5,8 +5,10 @@ export interface Options {
   yliki?: Yliki;
   topiki?: Topiki;
   klisi?: boolean;
+  mode?: Mode;
 }
 type Yliki = 'Ειρ' | 'Μον' | 'Πολ';
+type Mode = 'neataktiki' | 'eidikes';
 type Topiki =
   | 'Άμφισσας'
   | 'Άνδρου'
