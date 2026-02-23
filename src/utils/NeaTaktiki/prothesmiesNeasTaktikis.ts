@@ -20,6 +20,8 @@ import { getProtaseisDetails } from './Categories/protaseis/getProtaseisDetails'
 import { getProsthikiDetails } from './Categories/prosthiki/getProsthikiDetails';
 import { getOpsigeneisDetails } from './Categories/opsigeneis/getOpsigeneisDetails';
 import { getOpsigeneisAntikrousiDetails } from './Categories/opsigeneisAntikrousi/getOpsigeneisAntikrousiDetails';
+import { getDikasimosWindow } from './Categories/dikasimos/getDikasimosWindow';
+import { getDikasimosDetails } from './Categories/dikasimos/getDikasimosDetails';
 
 const N5221_EFFECTIVE_DATE = '2026-01-01';
 
@@ -39,6 +41,9 @@ interface ProthesmiesNeasTaktikis {
   prosthiki: string;
   mode?: Mode;
   dikasimos?: string;
+  dikasimosCalculated?: string;
+  dikasimosEarliest?: string;
+  dikasimosLatest?: string;
   opsigeneis?: string;
   opsigeneisAntikrousi?: string;
   antikrousiArt269?: string;
@@ -51,6 +56,7 @@ interface ProthesmiesNeasTaktikis {
   opsigeneisDetails?: DeadlineDetails;
   opsigeneisAntikrousiDetails?: DeadlineDetails;
   antikrousiArt269Details?: DeadlineDetails;
+  dikasimosCalculationDetails?: DeadlineDetails;
 }
 
 const isPostN5221 = (date: string): boolean =>
@@ -89,6 +95,12 @@ export const prothesmiesNeasTaktikis = (
   }
 
   const activeOptions = options ? options : optionsDefault;
+  const dikasimosWindow = getDikasimosWindow(katathesi, activeOptions);
+  const dikasimosCalculationDetails = getDikasimosDetails(
+    katathesi,
+    activeOptions,
+    dikasimosWindow
+  );
 
   if (mode === 'eidikes') {
     if (!isPostN5221(katathesi)) {
@@ -150,6 +162,9 @@ export const prothesmiesNeasTaktikis = (
       protaseis,
       prosthiki,
       dikasimos: activeOptions.dikasimos,
+      dikasimosCalculated: dikasimosWindow.dikasimosCalculated,
+      dikasimosEarliest: dikasimosWindow.dikasimosEarliest,
+      dikasimosLatest: dikasimosWindow.dikasimosLatest,
       epidosiDetails: {
         nomothesia: [
           `Αρθ. 215 § 2 ΚΠολΔ (Ν. 5221/2025). Για αγωγές που κατατίθενται από 1/1/2026, η αγωγή επιδίδεται εντός τριάντα (30) ημερών από την κατάθεση. Η προθεσμία είναι ενιαία και για διαδίκους εξωτερικού/αγνώστου διαμονής, με επίδοση και στον εισαγγελέα εντός της ίδιας προθεσμίας. Αν παρέλθει άπρακτη, η αγωγή θεωρείται ως μη ασκηθείσα.`,
@@ -159,6 +174,7 @@ export const prothesmiesNeasTaktikis = (
       },
       protaseisDetails,
       prosthikiDetails,
+      dikasimosCalculationDetails,
     };
   }
 
@@ -208,6 +224,9 @@ export const prothesmiesNeasTaktikis = (
     protaseis,
     prosthiki,
     dikasimos: activeOptions.dikasimos,
+    dikasimosCalculated: dikasimosWindow.dikasimosCalculated,
+    dikasimosEarliest: dikasimosWindow.dikasimosEarliest,
+    dikasimosLatest: dikasimosWindow.dikasimosLatest,
     opsigeneis,
     opsigeneisAntikrousi,
     antikrousiArt269,
@@ -220,6 +239,7 @@ export const prothesmiesNeasTaktikis = (
     ),
     protaseisDetails: getProtaseisDetails(katathesi, protaseis, activeOptions),
     prosthikiDetails: getProsthikiDetails(protaseis, prosthiki, activeOptions),
+    dikasimosCalculationDetails,
   };
   if (opsigeneis !== undefined && activeOptions.dikasimos !== undefined) {
     prothesmies.opsigeneisDetails = getOpsigeneisDetails(

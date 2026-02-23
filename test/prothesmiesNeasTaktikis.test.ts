@@ -1,7 +1,80 @@
 import { describe, expect, it } from 'vitest';
 import { prothesmiesNeasTaktikis } from '../src/utils/NeaTaktiki/prothesmiesNeasTaktikis';
 
+const addDaysIso = (date: string, days: number): string => {
+  const dt = new Date(`${date}T00:00:00.000Z`);
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return dt.toISOString().slice(0, 10);
+};
+
 describe('Υπολογισμός Προθεσμιών Νέας Τακτικής', () => {
+  it('returns post-2026 domestic dikasimos cap fields from Article 215', () => {
+    const result = prothesmiesNeasTaktikis('2026-02-01', {
+      topiki: 'Αθηνών',
+      exoterikou: false,
+    });
+
+    expect(result.dikasimosEarliest).toBeUndefined();
+    expect(result.dikasimosLatest).toBeDefined();
+    expect(result.dikasimosCalculated).toBe(result.dikasimosLatest);
+    expect(result.dikasimosCalculationDetails?.nomothesia[0]).toContain(
+      'διακόσιες δέκα (210) ημέρες'
+    );
+  });
+
+  it('applies 1/7-15/9 suspension adjustment to domestic dikasimos cap', () => {
+    const filingDate = '2026-01-10';
+    const result = prothesmiesNeasTaktikis(filingDate, {
+      topiki: 'Αθηνών',
+      exoterikou: false,
+    });
+    const raw210Days = addDaysIso(filingDate, 210);
+
+    expect(result.dikasimosLatest).toBeDefined();
+    expect((result.dikasimosLatest as string) > raw210Days).toBe(true);
+    expect(result.dikasimosCalculationDetails?.ypologismos[0]).toContain(
+      '1 Ιουλίου έως 15 Σεπτεμβρίου'
+    );
+  });
+
+  it('returns post-2026 foreign dikasimos earliest/latest bounds', () => {
+    const result = prothesmiesNeasTaktikis('2026-02-01', {
+      topiki: 'Αθηνών',
+      exoterikou: true,
+    });
+
+    expect(result.dikasimosEarliest).toBeDefined();
+    expect(result.dikasimosLatest).toBeDefined();
+    expect(result.dikasimosCalculated).toBe(result.dikasimosEarliest);
+    expect(
+      new Date(result.dikasimosLatest as string).getTime()
+    ).toBeGreaterThan(new Date(result.dikasimosEarliest as string).getTime());
+  });
+
+  it('preserves user-provided dikasimos while still returning calculated bounds', () => {
+    const result = prothesmiesNeasTaktikis('2026-02-01', {
+      topiki: 'Αθηνών',
+      exoterikou: false,
+      dikasimos: '2026-12-15',
+    });
+
+    expect(result.dikasimos).toBe('2026-12-15');
+    expect(result.dikasimosCalculated).toBe('2026-12-15');
+    expect(result.dikasimosLatest).toBeDefined();
+  });
+
+  it('does not return new dikasimos calculation fields before 2026', () => {
+    const result = prothesmiesNeasTaktikis('2025-12-31', {
+      topiki: 'Αθηνών',
+      exoterikou: false,
+    });
+
+    expect(result.dikasimosCalculated).toBeUndefined();
+    expect(result.dikasimosEarliest).toBeUndefined();
+    expect(result.dikasimosLatest).toBeUndefined();
+    expect(result.dikasimosCalculationDetails).toBeUndefined();
+  });
+
   it('uses fixed 30-day service window after 2026, even for foreign residence', () => {
     const local = prothesmiesNeasTaktikis('2026-01-08', {
       topiki: 'Αθηνών',
