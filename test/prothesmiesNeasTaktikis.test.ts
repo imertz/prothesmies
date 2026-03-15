@@ -14,9 +14,15 @@ describe('Υπολογισμός Προθεσμιών Νέας Τακτικής'
       exoterikou: false,
     });
 
-    expect(result.dikasimosEarliest).toBeUndefined();
+    expect(result.dikasimosEarliest).toBeDefined();
     expect(result.dikasimosLatest).toBeDefined();
-    expect(result.dikasimosCalculated).toBe(result.dikasimosLatest);
+    expect(result.dikasimosCalculated).toBe(result.dikasimosEarliest);
+    expect(
+      new Date(result.dikasimosLatest as string).getTime()
+    ).toBeGreaterThan(new Date(result.dikasimosEarliest as string).getTime());
+    expect(result.dikasimosCalculationDetails?.nomothesia[0]).toContain(
+      'διακόσιες (200) ημέρες'
+    );
     expect(result.dikasimosCalculationDetails?.nomothesia[0]).toContain(
       'διακόσιες δέκα (210) ημέρες'
     );
@@ -29,8 +35,11 @@ describe('Υπολογισμός Προθεσμιών Νέας Τακτικής'
       exoterikou: false,
     });
     const raw210Days = addDaysIso(filingDate, 210);
+    const raw200Days = addDaysIso(filingDate, 200);
 
+    expect(result.dikasimosEarliest).toBeDefined();
     expect(result.dikasimosLatest).toBeDefined();
+    expect((result.dikasimosEarliest as string) > raw200Days).toBe(true);
     expect((result.dikasimosLatest as string) > raw210Days).toBe(true);
     expect(result.dikasimosCalculationDetails?.ypologismos[0]).toContain(
       '1 Ιουλίου έως 15 Σεπτεμβρίου'

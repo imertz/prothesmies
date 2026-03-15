@@ -42,11 +42,14 @@ export const getDikasimosWindow = (
     };
   }
 
+  const earliest = getDate(katathesi, 200, argiesAndAnastoli);
   const latest = getDate(katathesi, 210, argiesAndAnastoli);
+  const dikasimosEarliest = toIsoDate(earliest);
   const dikasimosLatest = toIsoDate(latest);
 
   return {
-    dikasimosCalculated: options.dikasimos ?? dikasimosLatest,
+    dikasimosCalculated: options.dikasimos ?? dikasimosEarliest,
+    dikasimosEarliest,
     dikasimosLatest,
   };
 };
