@@ -21,14 +21,6 @@ const getDaysInMonth = function(year: number, month: number) {
   ][month];
 };
 
-// Date.prototype.isLeapYear = function() {
-//   return Date.isLeapYear(this.getFullYear());
-// };
-
-// Date.prototype.getDaysInMonth = function() {
-//   return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
-// };
-
 export const addMonths = function(
   start: string,
   noOfMonths: number,
@@ -104,18 +96,6 @@ export const addMonths = function(
 
   return { correctDate: dateWithCorrectDay, dateWithoutAnastoli, firstArgia };
 };
-
-// export function addMonths(
-//   start: string,
-//   noOfMonths: number
-//   // argiesAndAnastoli: { argies: string[]; anastoli: string[] }
-// ) {
-//   const startDate = new Date(start);
-//   const dateWithAddedMonths = new Date(
-//     startDate.setMonth(startDate.getMonth() + noOfMonths)
-//   );
-//   return dateWithAddedMonths;
-// }
 
 export function getDate(
   start: string,

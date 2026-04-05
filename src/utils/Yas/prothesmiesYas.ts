@@ -20,19 +20,6 @@ interface ProthesmiesYas {
     ypologismos: string[];
     imeres: string[];
   };
-  // synedria: string;
-  // lixi: string;
-
-  // epidosiDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
-  // anakopiDetails?: {
-  //   nomothesia: string[];
-  //   ypologismos: string[];
-  //   imeres: string[];
-  // };
 }
 
 export const prothesmiesYas = (
@@ -55,14 +42,6 @@ export const prothesmiesYas = (
 
   let synedria = getSynedria(gnostopoiisi, options ? options : optionsDefault);
   let oloklirosi = getOloklirosi(synedria);
-  // let epidosi = getEpidosi(katathesi, options ? options : optionsDefault);
-  // let anakopi = '';
-  // if (options?.epidosiDone !== undefined) {
-  //   anakopi = getAnakopi(
-  //     options?.epidosiDone,
-  //     options ? options : optionsDefault
-  //   );
-  // }
 
   const prothesmies: ProthesmiesYas = {
     synedria,
