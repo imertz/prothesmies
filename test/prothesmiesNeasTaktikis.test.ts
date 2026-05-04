@@ -152,7 +152,7 @@ describe('Υπολογισμός Προθεσμιών Νέας Τακτικής'
     ]);
   });
 
-  it('uses klisi filing date as anchor for protaseis after 2026', () => {
+  it('uses klisi service deadline as anchor for protaseis after 2026', () => {
     const agogiFlow = prothesmiesNeasTaktikis('2026-01-08', {
       topiki: 'Αθηνών',
       klisi: false,
@@ -164,15 +164,16 @@ describe('Υπολογισμός Προθεσμιών Νέας Τακτικής'
       exoterikou: false,
     });
 
-    expect(new Date(klisiFlow.protaseis).getTime()).toBeLessThan(
-      new Date(agogiFlow.protaseis).getTime()
-    );
+    expect(klisiFlow.protaseis).toBe(agogiFlow.protaseis);
     expect(klisiFlow.protaseisDetails?.imeres).toEqual([
-      'Eντός 90 ημερών από την κατάθεση της κλήσης.',
+      'Eντός 90 ημερών από το τέλος της προθεσμίας για επίδοση της κλήσης.',
     ]);
-    expect(klisiFlow.protaseisDetails?.nomothesia[0]).toContain('Αρθ. 237 § 3');
+    expect(klisiFlow.protaseisDetails?.nomothesia[0]).toContain('Αρθ. 237 § 1');
+    expect(klisiFlow.protaseisDetails?.nomothesia[0]).not.toContain(
+      'Αρθ. 237 § 3'
+    );
     expect(klisiFlow.protaseisDetails?.nomothesia[0]).toContain(
-      'κατάθεση της κλήσης για τον προσδιορισμό δικασίμου'
+      'προθεσμίας επίδοσης της αγωγής ή της κλήσης'
     );
   });
 
@@ -184,7 +185,7 @@ describe('Υπολογισμός Προθεσμιών Νέας Τακτικής'
     });
 
     expect(klisiFlowForeign.protaseisDetails?.imeres).toEqual([
-      'Eντός 120 ημερών από την κατάθεση της κλήσης.',
+      'Eντός 120 ημερών από το τέλος της προθεσμίας για επίδοση της κλήσης.',
     ]);
   });
 });

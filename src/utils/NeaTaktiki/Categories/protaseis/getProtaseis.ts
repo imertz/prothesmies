@@ -28,7 +28,12 @@ export const getProtaseis = (start: string, options: Options): string => {
 
   const year = parseInt(start.slice(0, 4));
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
-    if (options.klisi === false) {
+    const isKlisi = options.klisi === true;
+    const useServiceDeadlineAnchor =
+      !isKlisi ||
+      new Date(start).getTime() >= new Date('2026-01-01').getTime();
+
+    if (useServiceDeadlineAnchor) {
       let epidosiDays = getEpidosiDays(start, options?.exoterikou);
 
       let epidosi = getDate(start, epidosiDays, {

@@ -24,11 +24,17 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
     ypologismos: string[];
     imeres: string[];
   } = { nomothesia: [], ypologismos: [], imeres: [] };
+  const isPost2026 =
+    new Date(start).getTime() >= new Date('2026-01-01').getTime();
+  const isKlisi = options.klisi === true;
+  const useServiceDeadlineAnchor = !isKlisi || isPost2026;
+
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
-    if (options.klisi === false) {
+    if (useServiceDeadlineAnchor) {
       let days = options?.exoterikou ? 120 : 90;
+      const serviceTarget = isKlisi ? 'της κλήσης' : 'της αγωγής';
       text.imeres.push(
-        `Eντός ${days} ημερών από το τέλος της προθεσμίας για επίδοση της αγωγής.`
+        `Eντός ${days} ημερών από το τέλος της προθεσμίας για επίδοση ${serviceTarget}.`
       );
     } else {
       let days = options?.exoterikou ? 120 : 90;
@@ -160,7 +166,7 @@ export const getProtaseisAddedDays = (start: string, options: Options) => {
   }
   if (new Date(start).getTime() >= new Date('2022-01-01').getTime()) {
     let days;
-    if (options.klisi === false) {
+    if (useServiceDeadlineAnchor) {
       let epidosiDays = getEpidosiDays(start, options?.exoterikou);
       let argiesDimosiou: string[] = [];
       if (options?.dimosio) {

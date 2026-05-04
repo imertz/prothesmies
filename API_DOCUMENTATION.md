@@ -226,7 +226,7 @@ interface ProthesmiesNeasTaktikis {
 | **epidosi** | 30 days domestic / 60 days abroad, from katathesi | Always 30 days from katathesi |
 | **paremvasi** | 60 days domestic / 90 days abroad, from katathesi | 40 days domestic / 70 days abroad, from epidosi date |
 | **paremvasiProsek** | 90 days domestic / 120 days abroad, from katathesi | 70 days domestic / 100 days abroad, from epidosi date |
-| **protaseis** | 90 days domestic / 120 days abroad, from epidosi date (or katathesi if klisi) | Same |
+| **protaseis** | 90 days domestic / 120 days abroad, from epidosi date (or katathesi if klisi) | 90 days domestic / 120 days abroad, from the end of the service deadline for the lawsuit or summons |
 | **prosthiki** | 15 days from protaseis date | Same |
 | **opsigeneis** | 20 days **before** hearing (requires dikasimos) | **Abolished** |
 | **opsigeneisAntikrousi** | 10 days **before** hearing (requires dikasimos) | **Abolished** |
