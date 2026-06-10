@@ -36,6 +36,21 @@ const apotelesmataMikrodiaforon = prothesmies.prothesmiesMikrodiaforon(
     topiki: 'Καλλιθέας',
   }
 );
+
+const ametaklito = prothesmies.ypologismosAmetaklitou({
+  decision: {
+    court: 'monomeles_plimmeleiodikeio',
+    level: 'first_instance',
+    kind: 'conviction',
+    publicationDate: '2026-01-31',
+    registrationDate: '2026-01-31',
+    penalty: {
+      custodial: { kind: 'imprisonment', months: 5 },
+    },
+  },
+  defendant: { appearance: 'present' },
+  cassationActivity: { filings: [] },
+});
 ```
 
 ##### In ES6 module notation:
@@ -58,6 +73,24 @@ const apotelesmataMikrodiaforon = prothesmiesMikrodiaforon('2022-02-20', {
   topiki: 'Καλλιθέας',
 });
 ```
+
+## Αμετάκλητο Ποινικής Απόφασης
+
+Η `ypologismosAmetaklitou()` υπολογίζει την τελεσιδικία και το αμετάκλητο
+ποινικών αποφάσεων που δημοσιεύθηκαν από `2019-07-01` και μετά.
+
+- Εφαρμόζει τα ιστορικά όρια εκκλητού του άρθρου 489 ΚΠΔ.
+- Μετρά χωριστά τις προθεσμίες κατηγορουμένου, εισαγγελέα και ΕισΑΠ.
+- Αναστέλλει τις προθεσμίες από 1 έως 31 Αυγούστου.
+- Επιστρέφει `pending_input` αντί να εικάζει άγνωστη επίδοση ή καταχώριση.
+- Μετά από νέο δικαστικό αποτέλεσμα καλείται ξανά για τη νέα απόφαση.
+
+Η παρουσία `filings: []` δηλώνει ρητά ότι δεν ασκήθηκε ένδικο μέσο. Αν
+παραλειφθεί ολόκληρο το `appealActivity` ή `cassationActivity`, το αποτέλεσμα
+παραμένει εκκρεμές επειδή λείπει κρίσιμο input.
+
+Αναλυτικά types και παραδείγματα υπάρχουν στο
+[API_DOCUMENTATION.md](./API_DOCUMENTATION.md#7-ypologismosametaklitou).
 
 ## Προθεσμίες Νέας Τακτικής
 

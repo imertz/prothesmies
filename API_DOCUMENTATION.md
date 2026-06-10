@@ -17,6 +17,7 @@ import {
   prothesmiesApopoiisis,
   prothesmiesNDSte,
   prothesmiesYas,
+  ypologismosAmetaklitou,
 } from 'prothesmies';
 
 // CJS
@@ -27,10 +28,133 @@ const {
   prothesmiesApopoiisis,
   prothesmiesNDSte,
   prothesmiesYas,
+  ypologismosAmetaklitou,
 } = require('prothesmies');
 ```
 
 Zero dependencies. Works in browser and Node.js (>=14).
+
+## 7. `ypologismosAmetaklitou`
+
+Calculates when a Greek criminal judgment becomes final (`τελεσίδικη`) and
+irrevocable (`αμετάκλητη`) under the Code of Criminal Procedure. Automatic
+rules cover decisions published from `2019-07-01`.
+
+```ts
+const result = ypologismosAmetaklitou({
+  decision: {
+    court: 'monomeles_plimmeleiodikeio',
+    level: 'first_instance',
+    kind: 'conviction',
+    publicationDate: '2026-01-31',
+    registrationDate: '2026-01-31',
+    penalty: {
+      custodial: { kind: 'imprisonment', months: 5 },
+    },
+  },
+  defendant: {
+    appearance: 'present',
+  },
+  cassationActivity: {
+    filings: [],
+  },
+  penaltySatisfiedDate: '2027-02-28',
+});
+```
+
+### Input model
+
+```ts
+interface AmetaklitoInput {
+  decision: {
+    court: CriminalCourt;
+    level:
+      | 'first_instance'
+      | 'second_instance'
+      | 'court_of_cassation'
+      | 'remittal';
+    outcome?:
+      | 'judgment'
+      | 'appeal_rejected'
+      | 'cassation_rejected'
+      | 'cassation_granted'
+      | 'cassation_partially_granted';
+    kind: 'conviction' | 'other';
+    publicationDate: string;
+    registrationDate?: string;
+    offenseClassification?: 'misdemeanor' | 'felony';
+    penalty?: CriminalPenalty;
+    statutoryFinality?: 'ordinary' | 'anekliti' | 'ametakliti';
+    appealabilityOverride?: 'appealable' | 'unappealable';
+    cassationOverride?: 'allowed' | 'not_allowed';
+  };
+  defendant: {
+    appearance: 'present' | 'represented' | 'absent';
+    residence?: 'greece' | 'abroad' | 'unknown';
+    service?: {
+      date?: string;
+      validity: 'valid' | 'invalid' | 'unknown';
+    };
+  };
+  appealActivity?: RemedyActivity;
+  cassationActivity?: RemedyActivity;
+  supremeProsecutorRegistrationRequest?:
+    | { status: 'not_requested' | 'unknown' }
+    | { status: 'requested'; requestedAt: string };
+  penaltySatisfiedDate?: string;
+}
+```
+
+`RemedyActivity.filings: []` explicitly states that no remedy was filed.
+Omitting the activity object means that the fact is unknown and returns
+`pending_input`. A defendant waiver is supplied as
+`defendantWaiverDate`; prosecutor waiver is not supported.
+
+Automatic Article 489 classification is limited to convictions and the
+listed ordinary courts. Use `appealabilityOverride` and
+`cassationOverride` for acquittals or special procedures.
+
+### Results
+
+`status` is one of:
+
+| Status | Meaning |
+|--------|---------|
+| `calculated` | `ametaklitoDate` was calculated |
+| `pending_input` | Service, registration, remedy activity, or another critical fact is missing |
+| `pending_remedy_outcome` | An appeal or cassation was filed and its outcome is required |
+| `remanded` | Cassation was granted; calculate again for the remittal judgment |
+| `partial` | Partial cassation requires a separate calculation per autonomous chapter |
+
+Every result includes `deadlines`, `missingInputs`, `warnings`, and legal
+calculation details. A calculated result also includes the operative
+`ametaklitoDate` and `expiresAt: '19:00'`.
+
+For convictions, `derived` may include:
+
+- nominal penalty-limitation dates under Articles 118-120 PC;
+- criminal-record general-use omission date, when `penaltySatisfiedDate`
+  is supplied;
+- criminal-record entry and court-cost enforceability dates.
+
+The limitation expiry does not model later suspension events under Article
+120 PC. The criminal-record date concerns omission from a general-use copy,
+not destruction of the underlying record.
+
+### Calculation rules
+
+- The start day is excluded and expiry on a non-working day moves forward.
+- Remedy deadlines are suspended from August 1 through August 31.
+- Defendant and ordinary-prosecutor cassation periods are 20 days.
+- The Supreme Prosecutor period is one calendar month, not a fixed 30 days.
+- For an appealable first-instance judgment that was not appealed, the
+  special 30-day Supreme Prosecutor registration-request route is used.
+- The final date is always the latest still-active parallel deadline.
+
+The implementation follows the official texts of Laws 4620/2019,
+4637/2019, 4855/2021, 5090/2024, and 5282/2026. It does not automatically
+cover minors, press proceedings, European Arrest Warrant proceedings,
+sentence-execution remedies, or pre-`2019-07-01` law.
 
 ## Date Format
 
