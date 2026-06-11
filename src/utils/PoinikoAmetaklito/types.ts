@@ -89,6 +89,11 @@ export type DeadlinePhase =
   | 'cassation'
   | 'registration_request';
 
+export interface CriminalDeadlineDetails {
+  ypologismos: string[];
+  nomothesia: string[];
+}
+
 export interface CriminalDeadline {
   phase: DeadlinePhase;
   actor: RemedyActor;
@@ -98,6 +103,7 @@ export interface CriminalDeadline {
   amount: number;
   status: 'not_exercised' | 'waived' | 'filed' | 'unknown';
   legalBasis: string;
+  details: CriminalDeadlineDetails;
 }
 
 export interface PenaltyLimitationDate {

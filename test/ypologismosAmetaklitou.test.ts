@@ -268,6 +268,51 @@ describe('ypologismosAmetaklitou', () => {
     expect(result.warnings.join(' ')).toContain('εκκινεί από την καταχώριση');
   });
 
+  it('attaches per-deadline calculation and legislation details', () => {
+    const result = ypologismosAmetaklitou(unappealableInput());
+    const supreme = result.deadlines.find(
+      deadline => deadline.actor === 'supreme_prosecutor'
+    );
+
+    // 31-01-2026 + 1 month = 28-02-2026 (Saturday) -> shifted to 02-03-2026
+    expect(supreme?.details.ypologismos[0]).toContain('Ένας μήνας από');
+    expect(supreme?.details.ypologismos[0]).toContain('καταχώριση');
+    expect(supreme?.details.ypologismos.join(' ')).toContain('μετατέθηκε');
+    expect(supreme?.details.nomothesia.join(' ')).toContain('ενός (1) μηνός');
+
+    const historical = ypologismosAmetaklitou({
+      ...unappealableInput(),
+      decision: {
+        ...unappealableInput().decision,
+        publicationDate: '2021-03-10',
+        registrationDate: '2021-03-10',
+        penalty: { custodial: { kind: 'imprisonment', months: 2 } },
+      },
+    }).deadlines.find(deadline => deadline.actor === 'supreme_prosecutor');
+    expect(historical?.details.nomothesia.join(' ')).toContain(
+      'τριάντα (30) ημερών'
+    );
+  });
+
+  it('explains the August suspension in the deadline details', () => {
+    const result = ypologismosAmetaklitou({
+      ...unappealableInput(),
+      decision: {
+        ...unappealableInput().decision,
+        publicationDate: '2026-07-20',
+        registrationDate: '2026-07-20',
+      },
+    });
+    const supreme = result.deadlines.find(
+      deadline => deadline.actor === 'supreme_prosecutor'
+    );
+
+    expect(supreme?.details.ypologismos.join(' ')).toContain(
+      '1-31 Αυγούστου'
+    );
+    expect(supreme?.details.nomothesia.join(' ')).toContain('473 §4');
+  });
+
   it('requires valid service for an absent defendant', () => {
     const missing = ypologismosAmetaklitou({
       ...unappealableInput(),

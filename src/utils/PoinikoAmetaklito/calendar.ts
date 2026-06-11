@@ -81,14 +81,44 @@ function shiftToWorkingDay(date: Date): Date {
   return result;
 }
 
-export function addLegalDays(start: string, days: number): string {
+export interface LegalDeadlineComputation {
+  expiresOn: string;
+  nominalEnd: string;
+  augustDaysSkipped: number;
+  shifted: boolean;
+}
+
+function finishComputation(nominal: Date, augustDaysSkipped: number): LegalDeadlineComputation {
+  const nominalEnd = formatIsoDate(nominal);
+  const expiresOn = formatIsoDate(shiftToWorkingDay(nominal));
+  return {
+    expiresOn,
+    nominalEnd,
+    augustDaysSkipped,
+    shifted: expiresOn !== nominalEnd,
+  };
+}
+
+export function computeLegalDays(
+  start: string,
+  days: number
+): LegalDeadlineComputation {
   let result = parseIsoDate(start, 'deadline start');
   let counted = 0;
+  let augustDaysSkipped = 0;
   while (counted < days) {
     result = addUtcDays(result, 1);
-    if (!isAugust(result)) counted++;
+    if (isAugust(result)) {
+      augustDaysSkipped++;
+    } else {
+      counted++;
+    }
   }
-  return formatIsoDate(shiftToWorkingDay(result));
+  return finishComputation(result, augustDaysSkipped);
+}
+
+export function addLegalDays(start: string, days: number): string {
+  return computeLegalDays(start, days).expiresOn;
 }
 
 function addCalendarMonth(date: Date): Date {
@@ -112,15 +142,17 @@ function addCalendarMonth(date: Date): Date {
   );
 }
 
-export function addLegalMonth(start: string): string {
+export function computeLegalMonth(start: string): LegalDeadlineComputation {
   const startDate = parseIsoDate(start, 'deadline start');
   let result = addCalendarMonth(startDate);
   let cursor = addUtcDays(startDate, 1);
   let countedUntil = result;
+  let augustDaysSkipped = 0;
 
   while (cursor <= countedUntil) {
     if (isAugust(cursor)) {
       result = addUtcDays(result, 1);
+      augustDaysSkipped++;
     }
     cursor = addUtcDays(cursor, 1);
     if (cursor > countedUntil && countedUntil < result) {
@@ -128,7 +160,11 @@ export function addLegalMonth(start: string): string {
     }
   }
 
-  return formatIsoDate(shiftToWorkingDay(result));
+  return finishComputation(result, augustDaysSkipped);
+}
+
+export function addLegalMonth(start: string): string {
+  return computeLegalMonth(start).expiresOn;
 }
 
 export function addCalendarDays(start: string, days: number): string {

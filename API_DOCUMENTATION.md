@@ -130,6 +130,13 @@ Every result includes `deadlines`, `missingInputs`, `warnings`, and legal
 calculation details. A calculated result also includes the operative
 `ametaklitoDate` and `expiresAt: '19:00'`.
 
+Each deadline carries its own
+`details: { ypologismos: string[]; nomothesia: string[] }` — Greek
+step-by-step calculation lines (start event, August suspension if applied,
+holiday shift of the nominal expiry, waiver or filing) and the statutory
+text of the provision that creates the deadline, mirroring the
+`DeadlineDetails` shape of the civil-procedure functions.
+
 For convictions, `derived` may include:
 
 - nominal penalty-limitation dates under Articles 118-120 PC;

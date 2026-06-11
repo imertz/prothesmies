@@ -1,11 +1,13 @@
 import {
   addCalendarDays,
   addCalendarYears,
-  addLegalDays,
-  addLegalMonth,
+  computeLegalDays,
+  computeLegalMonth,
+  LegalDeadlineComputation,
   maxDate,
   parseIsoDate,
 } from './calendar';
+import { formatGreekDate, NOMOTHESIA_TEXTS, START_LABELS } from './texts';
 import { calculateAppealable } from './rules';
 import {
   AmetaklitoDerivedDates,
@@ -35,19 +37,30 @@ const SUPREME_PERIOD_CHANGE = '2021-11-12';
 function supremeProsecutorCassationSpec(registrationDate: string): {
   amount: number;
   unit: 'days' | 'month';
+  nomothesia: string[];
 } {
   return registrationDate < SUPREME_PERIOD_CHANGE
-    ? { amount: 30, unit: 'days' }
-    : { amount: 1, unit: 'month' };
+    ? {
+        amount: 30,
+        unit: 'days',
+        nomothesia: [NOMOTHESIA_TEXTS.cassationSupremeThirty],
+      }
+    : {
+        amount: 1,
+        unit: 'month',
+        nomothesia: [NOMOTHESIA_TEXTS.cassationSupremeMonth],
+      };
 }
 
 interface DeadlineSpec {
   phase: DeadlinePhase;
   actor: RemedyActor;
   start: string;
+  startLabel: string;
   amount: number;
   unit: 'days' | 'month';
   legalBasis: string;
+  nomothesia: string[];
   waiverCanPostdateExpiry?: boolean;
 }
 
@@ -208,10 +221,51 @@ function getDefendantServiceStart(
   return service.date;
 }
 
-function deadlineExpiry(spec: DeadlineSpec): string {
+function deadlineComputation(spec: DeadlineSpec): LegalDeadlineComputation {
   return spec.unit === 'month'
-    ? addLegalMonth(spec.start)
-    : addLegalDays(spec.start, spec.amount);
+    ? computeLegalMonth(spec.start)
+    : computeLegalDays(spec.start, spec.amount);
+}
+
+function buildDeadlineDetails(
+  spec: DeadlineSpec,
+  computation: LegalDeadlineComputation,
+  status: CriminalDeadline['status'],
+  filing: { filedAt: string } | undefined,
+  waiver: string | undefined
+): CriminalDeadline['details'] {
+  const ypologismos = [
+    spec.unit === 'month'
+      ? `Ένας μήνας από ${spec.startLabel} (${formatGreekDate(spec.start)}).`
+      : `${spec.amount} ημέρες από ${spec.startLabel} (${formatGreekDate(spec.start)}).`,
+  ];
+  const nomothesia = [...spec.nomothesia];
+  const nominalInAugust = computation.nominalEnd.slice(5, 7) === '08';
+
+  if (computation.augustDaysSkipped > 0 || nominalInAugust) {
+    ypologismos.push(
+      'Δεν προσμετρήθηκε το διάστημα 1-31 Αυγούστου (άρθρο 473 §4 ΚΠΔ).'
+    );
+    nomothesia.push(NOMOTHESIA_TEXTS.augustSuspension);
+  }
+  if (computation.shifted) {
+    ypologismos.push(
+      nominalInAugust
+        ? `Η ονομαστική λήξη (${formatGreekDate(computation.nominalEnd)}) εμπίπτει στην αναστολή του Αυγούστου και μετατέθηκε στις ${formatGreekDate(computation.expiresOn)}.`
+        : `Επειδή η ${formatGreekDate(computation.nominalEnd)} είναι εξαιρετέα ημέρα, η λήξη μετατέθηκε στην επόμενη εργάσιμη (${formatGreekDate(computation.expiresOn)}).`
+    );
+  }
+  if (status === 'waived' && waiver) {
+    ypologismos.push(
+      `Ο κατηγορούμενος παραιτήθηκε στις ${formatGreekDate(waiver)} και η προθεσμία έληξε με την παραίτηση.`
+    );
+  }
+  if (filing) {
+    ypologismos.push(
+      `Το ένδικο μέσο ασκήθηκε στις ${formatGreekDate(filing.filedAt)}.`
+    );
+  }
+  return { ypologismos, nomothesia };
 }
 
 function addDeadline(
@@ -219,7 +273,8 @@ function addDeadline(
   spec: DeadlineSpec,
   activity: RemedyActivity | undefined
 ): CriminalDeadline {
-  const normalExpiry = deadlineExpiry(spec);
+  const computation = deadlineComputation(spec);
+  const normalExpiry = computation.expiresOn;
   const filing = activity?.filings.find(item => item.actor === spec.actor);
   const waiver =
     spec.actor === 'defendant' ? activity?.defendantWaiverDate : undefined;
@@ -254,6 +309,7 @@ function addDeadline(
     amount: spec.amount,
     status,
     legalBasis: spec.legalBasis,
+    details: buildDeadlineDetails(spec, computation, status, filing, waiver),
   };
   result.deadlines.push(deadline);
   return deadline;
@@ -400,12 +456,20 @@ function pending(
 function defendantAppealStart(
   input: AmetaklitoInput,
   result: AmetaklitoResult
-): { start?: string; days: number } {
+): { start?: string; days: number; label: string } {
   if (input.defendant.appearance !== 'absent') {
-    return { start: input.decision.publicationDate, days: 10 };
+    return {
+      start: input.decision.publicationDate,
+      days: 10,
+      label: START_LABELS.publication,
+    };
   }
   if (input.appealActivity?.defendantWaiverDate) {
-    return { start: input.decision.publicationDate, days: 10 };
+    return {
+      start: input.decision.publicationDate,
+      days: 10,
+      label: START_LABELS.publication,
+    };
   }
   const days =
     input.defendant.residence === 'abroad' ||
@@ -422,6 +486,7 @@ function defendantAppealStart(
       'defendant.service(valid date)'
     ),
     days,
+    label: START_LABELS.service,
   };
 }
 
@@ -449,9 +514,11 @@ function calculateAppealPhase(
           phase: 'appeal',
           actor: 'defendant',
           start: defendantStart.start,
+          startLabel: defendantStart.label,
           amount: defendantStart.days,
           unit: 'days',
           legalBasis: LEGAL_BASIS.appeal,
+          nomothesia: [NOMOTHESIA_TEXTS.appeal],
           waiverCanPostdateExpiry: input.defendant.appearance === 'absent',
         },
         input.appealActivity
@@ -465,9 +532,11 @@ function calculateAppealPhase(
         phase: 'appeal',
         actor: 'prosecutor',
         start: input.decision.publicationDate,
+        startLabel: START_LABELS.publication,
         amount: 10,
         unit: 'days',
         legalBasis: LEGAL_BASIS.appeal,
+        nomothesia: [NOMOTHESIA_TEXTS.appeal],
       },
       input.appealActivity
     )
@@ -518,9 +587,11 @@ function calculateProsecutorOnlyAppealPhase(
       phase: 'appeal',
       actor: 'prosecutor',
       start: input.decision.publicationDate,
+      startLabel: START_LABELS.publication,
       amount: 10,
       unit: 'days',
       legalBasis: LEGAL_BASIS.prosecutorAppeal,
+      nomothesia: [NOMOTHESIA_TEXTS.prosecutorAppeal],
     },
     input.appealActivity
   );
@@ -553,9 +624,11 @@ function calculateFirstInstanceSupremeProsecutorPath(
       phase: 'registration_request',
       actor: 'supreme_prosecutor',
       start: input.decision.publicationDate,
+      startLabel: START_LABELS.publication,
       amount: 30,
       unit: 'days',
       legalBasis: LEGAL_BASIS.registrationRequest,
+      nomothesia: [NOMOTHESIA_TEXTS.registrationRequest],
     },
     request?.status === 'requested'
       ? {
@@ -628,9 +701,11 @@ function calculateFirstInstanceSupremeProsecutorPath(
       phase: 'cassation',
       actor: 'supreme_prosecutor',
       start: input.decision.registrationDate,
+      startLabel: START_LABELS.registration,
       amount: supremeSpec.amount,
       unit: supremeSpec.unit,
       legalBasis: LEGAL_BASIS.cassation,
+      nomothesia: supremeSpec.nomothesia,
     },
     input.cassationActivity
   );
@@ -697,9 +772,14 @@ function calculateCassationPhase(
           phase: 'cassation',
           actor: 'defendant',
           start: defendantStart,
+          startLabel:
+            defendantStart === registrationDate
+              ? START_LABELS.registration
+              : START_LABELS.serviceRegistered,
           amount: 20,
           unit: 'days',
           legalBasis: LEGAL_BASIS.cassation,
+          nomothesia: [NOMOTHESIA_TEXTS.cassationDefendant],
           waiverCanPostdateExpiry: input.defendant.appearance === 'absent',
         },
         input.cassationActivity
@@ -713,9 +793,11 @@ function calculateCassationPhase(
         phase: 'cassation',
         actor: 'prosecutor',
         start: registrationDate,
+        startLabel: START_LABELS.registration,
         amount: 20,
         unit: 'days',
         legalBasis: LEGAL_BASIS.cassation,
+        nomothesia: [NOMOTHESIA_TEXTS.cassationProsecutor],
       },
       input.cassationActivity
     ),
@@ -725,6 +807,7 @@ function calculateCassationPhase(
         phase: 'cassation',
         actor: 'supreme_prosecutor',
         start: registrationDate,
+        startLabel: START_LABELS.registration,
         ...supremeProsecutorCassationSpec(registrationDate),
         legalBasis: LEGAL_BASIS.cassation,
       },
