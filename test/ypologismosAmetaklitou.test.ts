@@ -19,6 +19,7 @@ function unappealableInput(
       },
     },
     defendant: { appearance: 'present' },
+    appealActivity: { filings: [] },
     cassationActivity: { filings: [] },
     ...overrides,
   };
@@ -163,6 +164,108 @@ describe('ypologismosAmetaklitou', () => {
     expect(supreme?.expiresOn).toBe('2026-03-02');
     expect(result.ametaklitoDate).toBe('2026-03-02');
     expect(result.expiresAt).toBe('19:00');
+  });
+
+  it('models the Article 491 prosecutor appeal window for unappealable convictions', () => {
+    const base = unappealableInput();
+    const unknownActivity = ypologismosAmetaklitou({
+      ...base,
+      appealActivity: undefined,
+    });
+    const noneFiled = ypologismosAmetaklitou(base);
+    const prosecutorFiled = ypologismosAmetaklitou({
+      ...base,
+      appealActivity: {
+        filings: [{ actor: 'prosecutor', filedAt: '2026-02-05' }],
+      },
+    });
+
+    expect(unknownActivity.status).toBe('pending_input');
+    expect(unknownActivity.missingInputs).toContain('appealActivity');
+
+    const window = noneFiled.deadlines.find(
+      deadline =>
+        deadline.phase === 'appeal' && deadline.actor === 'prosecutor'
+    );
+    expect(window?.amount).toBe(10);
+    expect(window?.legalBasis).toContain('491');
+    expect(noneFiled.telisidikiDate).toBe(window?.expiresOn);
+    expect(noneFiled.ametaklitoDate).toBe('2026-03-02');
+
+    expect(prosecutorFiled.status).toBe('pending_remedy_outcome');
+  });
+
+  it('rejects a defendant appeal filing against an unappealable conviction', () => {
+    expect(() =>
+      ypologismosAmetaklitou({
+        ...unappealableInput(),
+        appealActivity: {
+          filings: [{ actor: 'defendant', filedAt: '2026-02-05' }],
+        },
+      })
+    ).toThrow('defendant is not a supported actor for the appeal phase');
+  });
+
+  it('suppresses the Article 491 window under an explicit unappealable override', () => {
+    const result = ypologismosAmetaklitou({
+      ...unappealableInput(),
+      decision: {
+        ...unappealableInput().decision,
+        appealabilityOverride: 'unappealable',
+      },
+      appealActivity: undefined,
+    });
+
+    expect(result.status).toBe('calculated');
+    expect(result.telisidikiDate).toBe('2026-01-31');
+    expect(
+      result.deadlines.some(deadline => deadline.phase === 'appeal')
+    ).toBe(false);
+  });
+
+  it('uses 30 days instead of one month for the Supreme Prosecutor before 12.11.2021', () => {
+    const result = ypologismosAmetaklitou({
+      ...unappealableInput(),
+      decision: {
+        ...unappealableInput().decision,
+        publicationDate: '2021-03-10',
+        registrationDate: '2021-03-10',
+        penalty: { custodial: { kind: 'imprisonment', months: 2 } },
+      },
+    });
+    const supreme = result.deadlines.find(
+      deadline =>
+        deadline.phase === 'cassation' &&
+        deadline.actor === 'supreme_prosecutor'
+    );
+
+    expect(supreme?.unit).toBe('days');
+    expect(supreme?.amount).toBe(30);
+    expect(supreme?.expiresOn).toBe('2021-04-09');
+    expect(result.ametaklitoDate).toBe('2021-04-09');
+  });
+
+  it('starts the absent-defendant cassation clock at registration when service came earlier', () => {
+    const result = ypologismosAmetaklitou({
+      ...unappealableInput(),
+      decision: {
+        ...unappealableInput().decision,
+        registrationDate: '2026-02-10',
+      },
+      defendant: {
+        appearance: 'absent',
+        residence: 'greece',
+        service: { date: '2026-02-05', validity: 'valid' },
+      },
+    });
+    const defendant = result.deadlines.find(
+      deadline =>
+        deadline.phase === 'cassation' && deadline.actor === 'defendant'
+    );
+
+    expect(result.status).toBe('calculated');
+    expect(defendant?.startsOn).toBe('2026-02-10');
+    expect(result.warnings.join(' ')).toContain('εκκινεί από την καταχώριση');
   });
 
   it('requires valid service for an absent defendant', () => {

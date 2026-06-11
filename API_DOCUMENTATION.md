@@ -145,11 +145,22 @@ not destruction of the underlying record.
 
 - The start day is excluded and expiry on a non-working day moves forward.
 - Remedy deadlines are suspended from August 1 through August 31.
+- A first-instance conviction below the Article 489 thresholds is still
+  appealable by the prosecutor under Article 491 §1 within 10 days of
+  publication, so `appealActivity` is required there too and finality
+  (`telisidikiDate`) arrives only when that window lapses. An explicit
+  `appealabilityOverride: 'unappealable'` suppresses this window for
+  special procedures outside Article 491.
 - Defendant and ordinary-prosecutor cassation periods are 20 days.
-- The Supreme Prosecutor period is one calendar month, not a fixed 30 days.
+- The Supreme Prosecutor cassation period is one calendar month for
+  registrations from 2021-11-12 (Law 4855/2021) and 30 days before that.
 - For an appealable first-instance judgment that was not appealed, the
   special 30-day Supreme Prosecutor registration-request route is used.
 - The final date is always the latest still-active parallel deadline.
+- `expiresAt: '19:00'` is the practical electronic-filing cutoff carried
+  over from civil procedure (Article 144 §1 CCP); for paper filings,
+  Article 168 §2 CCrP ends the last day with the close of the competent
+  registry's working hours, which may be earlier.
 
 The implementation follows the official texts of Laws 4620/2019,
 4637/2019, 4855/2021, 5090/2024, and 5282/2026. It does not automatically

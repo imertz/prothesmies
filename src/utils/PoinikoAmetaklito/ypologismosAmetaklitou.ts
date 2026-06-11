@@ -23,9 +23,23 @@ const LEGAL_BASIS = {
   calculation: 'Άρθρα 168 και 473 ΚΠΔ',
   appealability: 'Άρθρο 489 ΚΠΔ',
   appeal: 'Άρθρο 473 §1 ΚΠΔ',
+  prosecutorAppeal: 'Άρθρο 491 §1 ΚΠΔ',
   cassation: 'Άρθρα 473 §§2-4, 504, 505 και 507 ΚΠΔ',
   registrationRequest: 'Άρθρο 473 §3 τελευταίο εδάφιο ΚΠΔ',
 };
+
+// Ν. 4855/2021 (ΦΕΚ Α΄ 215/12.11.2021) extended the Supreme Prosecutor
+// cassation period in Article 473 §3 from thirty days to one month.
+const SUPREME_PERIOD_CHANGE = '2021-11-12';
+
+function supremeProsecutorCassationSpec(registrationDate: string): {
+  amount: number;
+  unit: 'days' | 'month';
+} {
+  return registrationDate < SUPREME_PERIOD_CHANGE
+    ? { amount: 30, unit: 'days' }
+    : { amount: 1, unit: 'month' };
+}
 
 interface DeadlineSpec {
   phase: DeadlinePhase;
@@ -56,6 +70,7 @@ function baseResult(): AmetaklitoResult {
         LEGAL_BASIS.calculation,
         LEGAL_BASIS.appealability,
         LEGAL_BASIS.appeal,
+        LEGAL_BASIS.prosecutorAppeal,
         LEGAL_BASIS.cassation,
       ],
       ypologismos: [],
@@ -184,8 +199,11 @@ function getDefendantServiceStart(
     }
     return undefined;
   }
-  if (minimum) {
-    assertNotBefore(service.date, minimum, 'defendant.service.date');
+  if (minimum && service.date < minimum) {
+    result.warnings.push(
+      'Η επίδοση προηγήθηκε της καταχώρισης στο ειδικό βιβλίο· η προθεσμία εκκινεί από την καταχώριση.'
+    );
+    return minimum;
   }
   return service.date;
 }
@@ -484,6 +502,46 @@ function calculateAppealPhase(
   return calculateFirstInstanceSupremeProsecutorPath(input, result);
 }
 
+function calculateProsecutorOnlyAppealPhase(
+  input: AmetaklitoInput,
+  result: AmetaklitoResult
+): AmetaklitoResult {
+  validatePhaseActors(input.appealActivity, 'appeal', ['prosecutor']);
+  const missing = missingActivity(
+    result,
+    input.appealActivity,
+    'appealActivity'
+  );
+  const deadline = addDeadline(
+    result,
+    {
+      phase: 'appeal',
+      actor: 'prosecutor',
+      start: input.decision.publicationDate,
+      amount: 10,
+      unit: 'days',
+      legalBasis: LEGAL_BASIS.prosecutorAppeal,
+    },
+    input.appealActivity
+  );
+
+  if (missing) {
+    return pending(input, result, 'pending_input');
+  }
+  if (deadline.status === 'filed') {
+    result.details.ypologismos.push(
+      'Ασκήθηκε έφεση από τον εισαγγελέα κατά το άρθρο 491 §1 ΚΠΔ και απαιτείται η απόφαση του δευτεροβάθμιου δικαστηρίου.'
+    );
+    return pending(input, result, 'pending_remedy_outcome');
+  }
+
+  result.telisidikiDate = deadline.expiresOn;
+  result.details.ypologismos.push(
+    `Η απόφαση δεν υπόκειται σε έφεση από τον κατηγορούμενο. Έγινε τελεσίδικη στις ${deadline.expiresOn}, με τη λήξη της προθεσμίας έφεσης του εισαγγελέα κατά το άρθρο 491 §1 ΚΠΔ.`
+  );
+  return calculateCassationPhase(input, result);
+}
+
 function calculateFirstInstanceSupremeProsecutorPath(
   input: AmetaklitoInput,
   result: AmetaklitoResult
@@ -561,14 +619,17 @@ function calculateFirstInstanceSupremeProsecutorPath(
   ) {
     return pending(input, result, 'pending_input');
   }
+  const supremeSpec = supremeProsecutorCassationSpec(
+    input.decision.registrationDate
+  );
   const cassationDeadline = addDeadline(
     result,
     {
       phase: 'cassation',
       actor: 'supreme_prosecutor',
       start: input.decision.registrationDate,
-      amount: 1,
-      unit: 'month',
+      amount: supremeSpec.amount,
+      unit: supremeSpec.unit,
       legalBasis: LEGAL_BASIS.cassation,
     },
     input.cassationActivity
@@ -596,7 +657,7 @@ function calculateCassationPhase(
     return finish(
       input,
       result,
-      input.decision.publicationDate,
+      result.telisidikiDate || input.decision.publicationDate,
       'Η απόφαση δεν υπόκειται σε αναίρεση κατά το ρητό override.'
     );
   }
@@ -664,8 +725,7 @@ function calculateCassationPhase(
         phase: 'cassation',
         actor: 'supreme_prosecutor',
         start: registrationDate,
-        amount: 1,
-        unit: 'month',
+        ...supremeProsecutorCassationSpec(registrationDate),
         legalBasis: LEGAL_BASIS.cassation,
       },
       input.cassationActivity
@@ -741,6 +801,12 @@ export function ypologismosAmetaklitou(
     result.appealable = calculateAppealable(decision);
     if (result.appealable) {
       return calculateAppealPhase(input, result);
+    }
+    // Article 491 §1: the prosecutor may appeal any first-instance
+    // conviction even below the Article 489 thresholds. An explicit
+    // appealabilityOverride suppresses this window for special procedures.
+    if (!decision.appealabilityOverride) {
+      return calculateProsecutorOnlyAppealPhase(input, result);
     }
   } else {
     result.appealable = false;
